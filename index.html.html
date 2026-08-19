@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<title>BookMyGolf — Golfer Prototype</title>
+<meta name="theme-color" content="#15875A">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#15161A;--ink2:#55575E;--ink3:#8B8D94;--line:#E7E7E8;--bg:#F6F6F3;--surface:#FFF;
+  --green:#15875A;--green2:#0E6B46;--greenbg:#E9F8F1;
+  --blue:#2454EB;--bluebg:#EDF1FE;--amber:#B4670A;--amberbg:#FFF6E7;
+  --red:#D3401F;--redbg:#FCEEEA;--purple:#6E56CF;--purplebg:#F1EDFB;
+  --teal:#0E8074;--tealbg:#E7F6F3;--r:17px;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+button,input,select{font:inherit}.app{height:100dvh;max-width:520px;margin:auto;background:var(--bg);display:flex;flex-direction:column;position:relative}
+main{flex:1;min-height:0;overflow:hidden}.screen{display:none;height:100%;overflow-y:auto;padding-bottom:20px}.screen.active{display:block}.screen::-webkit-scrollbar{display:none}
+header{padding:calc(18px + env(safe-area-inset-top)) 20px 12px;background:var(--bg);position:sticky;top:0;z-index:10}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:12px}.eyebrow{font-size:11px;color:var(--ink3);font-weight:700}.title{font-size:23px;font-weight:800;letter-spacing:-.035em}.subtitle{font-size:12px;color:var(--ink3);margin-top:3px}
+.icon{width:38px;height:38px;border:1px solid var(--line);background:#fff;border-radius:12px;display:grid;place-items:center;cursor:pointer}
+.section{margin:17px 20px 0}.secrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.seclabel{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);font-weight:800}.link{font-size:12px;color:var(--green);font-weight:800;cursor:pointer}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r)}.pad{padding:15px}.row{display:flex;align-items:center;gap:11px}.between{justify-content:space-between}.muted{color:var(--ink3)}.small{font-size:11px}.tiny{font-size:10px}.bold{font-weight:800}
+.btn{border:0;border-radius:12px;padding:12px 15px;font-weight:800;font-size:13px;cursor:pointer}.primary{background:var(--green);color:#fff}.secondary{background:#F0F0EE;color:var(--ink2)}.outline{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.full{width:100%}.pill{display:inline-flex;align-items:center;padding:4px 9px;border-radius:20px;font-size:10.5px;font-weight:800}.pgreen{background:var(--greenbg);color:var(--green2)}.pblue{background:var(--bluebg);color:var(--blue)}.pamber{background:var(--amberbg);color:var(--amber)}.pred{background:var(--redbg);color:var(--red)}.ppurple{background:var(--purplebg);color:var(--purple)}.pteal{background:var(--tealbg);color:var(--teal)}
+.avatar{width:42px;height:42px;border-radius:13px;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.hero{background:linear-gradient(135deg,#0f6946,#229e70);color:#fff;border-radius:22px;padding:18px;margin:14px 20px 0;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:150px;height:150px;border:28px solid rgba(255,255,255,.08);border-radius:50%;right:-45px;top:-45px}.hero h2{font-size:20px;letter-spacing:-.03em}.hero p{font-size:11.5px;opacity:.82;margin-top:5px}.hero .btn{margin-top:14px;background:#fff;color:var(--green2)}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.quick button{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px 5px;cursor:pointer}.quick .qi{font-size:19px}.quick .ql{font-size:10px;font-weight:800;color:var(--ink2);margin-top:6px}
+.attn{display:flex;gap:9px;overflow-x:auto}.attn::-webkit-scrollbar{display:none}.attn .card{min-width:220px;padding:13px;cursor:pointer}.attn .tag{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.attn h3{font-size:13px;margin-top:5px}.attn p{font-size:11px;color:var(--ink3);margin-top:3px}
+.course{padding:0;overflow:hidden;cursor:pointer}.course-cover{height:88px;background:linear-gradient(135deg,#173d2b,#5c8b5d);display:flex;align-items:center;justify-content:center;font-size:30px}.course-body{padding:12px}.course h3{font-size:13.5px}.course-meta{font-size:11px;color:var(--ink3);margin-top:3px}.course-foot{display:flex;justify-content:space-between;align-items:center;margin-top:9px}
+.hscroll{display:flex;gap:10px;overflow-x:auto}.hscroll::-webkit-scrollbar{display:none}.hscroll>*{min-width:220px}
+.schedule-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}.schedule-item:last-child{border:0}.time{width:53px;text-align:right;font-size:12px;font-weight:800;color:var(--ink2);flex:none}.bar{width:3px;border-radius:3px;background:var(--green);flex:none}.schedule-item h3{font-size:13.5px}.schedule-item p{font-size:11px;color:var(--ink3);margin-top:3px}
+.nav{height:calc(74px + env(safe-area-inset-bottom));padding:9px 5px env(safe-area-inset-bottom);background:#fff;border-top:1px solid var(--line);display:flex;flex:none;z-index:30}.nav button{flex:1;border:0;background:none;color:var(--ink3);font-size:10px;font-weight:700;cursor:pointer;position:relative}.nav .ni{font-size:20px;display:block;margin-bottom:4px}.nav .active{color:var(--green)}.badge{position:absolute;top:0;right:28%;background:var(--red);color:#fff;border-radius:10px;font-size:8px;padding:2px 5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.list{display:flex;flex-direction:column}.listrow{padding:13px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px;cursor:pointer}.listrow:last-child{border:0}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden}.stat{text-align:center;padding:13px 5px}.stat+.stat{border-left:1px solid var(--line)}.stat b{font-size:17px}.stat span{display:block;font-size:9.5px;color:var(--ink3);margin-top:3px;text-transform:uppercase;font-weight:700}
+.segment{display:flex;background:#EBEBE9;padding:3px;border-radius:12px}.segment button{flex:1;border:0;background:transparent;border-radius:9px;padding:8px;font-size:11.5px;font-weight:800;color:var(--ink3);cursor:pointer}.segment .sel{background:#fff;color:var(--ink);box-shadow:0 1px 4px #0001}
+.chips{display:flex;gap:7px;overflow-x:auto}.chips::-webkit-scrollbar{display:none}.chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}.chip.sel{background:var(--ink);color:#fff}
+.sheetbg{display:none;position:absolute;inset:0;background:#0007;z-index:60;align-items:flex-end}.sheetbg.open{display:flex}.sheet{background:#fff;width:100%;max-height:91%;overflow:auto;border-radius:23px 23px 0 0;padding:12px 20px calc(24px + env(safe-area-inset-bottom))}.handle{width:35px;height:4px;background:#ccc;border-radius:3px;margin:0 auto 17px}.sheet h2{font-size:19px;margin-bottom:14px}.field{margin:12px 0}.field label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);font-weight:800;display:block;margin-bottom:6px}.field input,.field select{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;outline:none;background:#fff}.actions{display:flex;gap:9px;margin-top:15px}.actions>*{flex:1}
+.toast{position:absolute;left:50%;bottom:91px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 15px;border-radius:22px;font-size:11px;font-weight:700;z-index:100;display:none}.toast.show{display:block}
+.back{color:var(--green);font-size:12px;font-weight:800;cursor:pointer}
+.score-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}.hole{border:1px solid var(--line);border-radius:7px;padding:7px 2px;text-align:center;font-size:10px}.hole input{width:100%;border:0;text-align:center;font-weight:800;outline:0;background:transparent}
+.feed{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.feed:last-child{border:0}.feed h3{font-size:12.5px}.feed p{font-size:11px;color:var(--ink3);margin-top:3px}
+.progress{height:7px;background:#eee;border-radius:6px;overflow:hidden;margin-top:9px}.progress i{display:block;height:100%;background:var(--green)}
+.notice{padding:11px 12px;border-radius:12px;font-size:11px}.notice.green{background:var(--greenbg);color:var(--green2)}.notice.amber{background:var(--amberbg);color:var(--amber)}
+@media(min-width:640px){.app{max-width:520px;box-shadow:0 0 35px #0001}}
+</style>
+
+<style>
+/* ── Expanded prototype components ── */
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.kpi4 .card{padding:11px 7px;text-align:center}.kpi4 b{font-size:16px}.kpi4 span{display:block;font-size:9px;color:var(--ink3);margin-top:3px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.calday{background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 2px;text-align:center;font-size:9px;color:var(--ink3);cursor:pointer}.calday b{display:block;color:var(--ink);font-size:12px;margin-top:4px}.calday.sel{background:var(--green);color:#fff;border-color:var(--green)}.calday.sel b{color:#fff}
+.availability{display:flex;align-items:center;gap:6px}.availability i{width:7px;height:7px;border-radius:50%;background:#35A56E}.availability.busy i{background:#E7A22B}.availability.full i{background:#D3401F}
+.table{width:100%;border-collapse:collapse;font-size:11px}.table th{text-align:left;color:var(--ink3);font-size:9px;text-transform:uppercase;letter-spacing:.05em;padding:8px 5px;border-bottom:1px solid var(--line)}.table td{padding:9px 5px;border-bottom:1px solid var(--line)}.table tr:last-child td{border:0}
+.timeline{position:relative;padding-left:19px}.timeline:before{content:"";position:absolute;left:5px;top:3px;bottom:3px;width:2px;background:var(--line)}.tl{position:relative;padding:0 0 15px}.tl:before{content:"";position:absolute;left:-18px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--green);border:2px solid #fff;box-shadow:0 0 0 1px var(--green)}.tl h4{font-size:12px}.tl p{font-size:10.5px;color:var(--ink3);margin-top:3px}
+.photo{height:120px;border-radius:14px;background:linear-gradient(135deg,#173a2a,#6d9b65);display:grid;place-items:center;font-size:48px;color:#fff}.rating{font-weight:800}.stars{letter-spacing:1px;color:#D9951B}
+.notice.red{background:var(--redbg);color:var(--red)}.notice.blue{background:var(--bluebg);color:var(--blue)}
+textarea{width:100%;min-height:82px;border:1px solid var(--line);border-radius:11px;padding:11px;resize:none;outline:0}
+.switch{width:40px;height:22px;background:#D8D8D5;border-radius:20px;padding:2px;cursor:pointer}.switch i{display:block;width:18px;height:18px;background:#fff;border-radius:50%;transition:.15s}.switch.on{background:var(--green)}.switch.on i{transform:translateX(18px)}
+.empty{padding:28px 15px;text-align:center;color:var(--ink3);font-size:12px}
+.bottom-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 0 2px;margin-top:12px}
+</style>
+
+</head>
+<body>
+<div class="app">
+<main id="main">
+
+<section id="home" class="screen active">
+<header><div class="hrow"><div><div class="eyebrow">Wednesday · 19 Aug</div><div class="title">Good evening, Arjun</div><div class="subtitle">Your golf week, in one place.</div></div><button class="icon" onclick="openSheet('notifications')">🔔<span class="badge" style="top:3px;right:2px">3</span></button></div></header>
+<div class="hero"><h2>Tomorrow: Delhi Golf Club</h2><p>7:30 AM · 18 holes · 4 players · Caddy reserved</p><button class="btn" onclick="show('booking')">View booking →</button></div>
+<div class="section"><div class="secrow"><div class="seclabel">Quick actions</div></div><div class="quick">
+<button onclick="show('discover')"><div class="qi">🗺️</div><div class="ql">Find golf</div></button>
+<button onclick="show('booking')"><div class="qi">📅</div><div class="ql">Book tee time</div></button>
+<button onclick="show('lessons')"><div class="qi">🎓</div><div class="ql">Lessons</div></button>
+<button onclick="show('range')"><div class="qi">🏌️</div><div class="ql">Range</div></button>
+</div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Needs your attention</div></div><div class="attn">
+<div class="card" style="background:var(--amberbg)" onclick="openSheet('reschedule')"><div class="tag" style="color:var(--amber)">Booking</div><h3>Rain forecast after 5 PM</h3><p>Tomorrow's tee time can be rescheduled before 7:30 PM today.</p></div>
+<div class="card" style="background:var(--bluebg)" onclick="show('lessons')"><div class="tag" style="color:var(--blue)">Coach</div><h3>New swing feedback</h3><p>Arjun added 3 frames and a voice note after your last lesson.</p></div>
+<div class="card" style="background:var(--greenbg)" onclick="show('memberships')"><div class="tag" style="color:var(--green2)">Membership</div><h3>Member rate applied</h3><p>Delhi Golf Club saved ₹700 on your next booking.</p></div>
+</div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Upcoming</div><span class="link" onclick="show('schedule')">See all</span></div>
+<div class="card pad"><div class="schedule-item" onclick="show('booking')"><div class="time">7:30<br><span class="muted">AM</span></div><div class="bar"></div><div><h3>Delhi Golf Club</h3><p>18 holes · 4 players · Ramesh Kumar caddy</p><div style="margin-top:6px"><span class="pill pgreen">Confirmed</span></div></div></div>
+<div class="schedule-item" onclick="show('lessons')"><div class="time">10:30<br><span class="muted">AM</span></div><div class="bar" style="background:var(--blue)"></div><div><h3>Short Game · Arjun Mehta</h3><p>60 min · KGA · Lesson package</p><div style="margin-top:6px"><span class="pill pblue">Coach session</span></div></div></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Golf beyond booking</div></div><div class="grid2">
+<div class="card pad" onclick="show('news')"><b>📰 Golf news</b><div class="small muted">India, tour & coaching</div></div>
+<div class="card pad" onclick="show('record')"><b>📊 Your handicap</b><div class="small muted">14.2 · 37 rounds</div></div>
+<div class="card pad" onclick="show('corporate')"><b>🤝 Corporate golf</b><div class="small muted">Group & client events</div></div>
+<div class="card pad" onclick="show('shop')"><b>🛍️ Equipment</b><div class="small muted">Pro shops nationwide</div></div>
+</div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Nearby courses</div><span class="link" onclick="show('discover')">Explore</span></div><div class="hscroll">
+<div class="card course" onclick="openCourse('Delhi Golf Club')"><div class="course-cover">⛳</div><div class="course-body"><h3>Delhi Golf Club</h3><div class="course-meta">18 holes · 2.1 km · 4.7 ★</div><div class="course-foot"><span class="pill pgreen">Member rate</span><b>₹2,500</b></div></div></div>
+<div class="card course" onclick="openCourse('Qutub Golf Course')"><div class="course-cover" style="background:linear-gradient(135deg,#254d3a,#779a5a)">🌳</div><div class="course-body"><h3>Qutub Golf Course</h3><div class="course-meta">9 holes · 5.4 km · 4.4 ★</div><div class="course-foot"><span class="pill pteal">Public</span><b>₹1,800</b></div></div></div>
+</div></div>
+</section>
+
+<section id="discover" class="screen">
+<header>
+  <div class="hrow">
+    <div><div class="eyebrow">Discover</div><div class="title">Golf near you</div><div class="subtitle" id="discoverSummary">Delhi NCR · 18 results</div></div>
+    <button class="icon" onclick="openSheet('filters')">☷</button>
+  </div>
+</header>
+
+<div class="section">
+  <div class="chips" id="discoverTypes">
+    <button class="chip sel" data-type="all" onclick="discoverType(this)">All <span class="tiny">(18)</span></button>
+    <button class="chip" data-type="course" onclick="discoverType(this)">Courses <span class="tiny">(6)</span></button>
+    <button class="chip" data-type="range" onclick="discoverType(this)">Ranges <span class="tiny">(4)</span></button>
+    <button class="chip" data-type="coach" onclick="discoverType(this)">Coaches <span class="tiny">(4)</span></button>
+    <button class="chip" data-type="tournament" onclick="discoverType(this)">Tournaments <span class="tiny">(2)</span></button>
+    <button class="chip" data-type="shop" onclick="discoverType(this)">Shops <span class="tiny">(2)</span></button>
+  </div>
+</div>
+
+<div class="section">
+  <div class="card pad">
+    <div class="row">
+      <div style="font-size:24px">📍</div>
+      <div style="flex:1">
+        <b id="discoverLocation">Shiamgir, Delhi</b>
+        <div class="small muted">Showing nearby golf experiences</div>
+      </div>
+      <button class="btn outline" onclick="openSheet('location')">Change</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="row" style="gap:8px">
+    <div style="flex:1">
+      <input id="discoverSearch" oninput="filterDiscover()" placeholder="Search courses, coaches, events…" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;outline:0;background:#fff">
+    </div>
+    <button class="icon" onclick="sortDiscover()">↕</button>
+  </div>
+</div>
+
+<div class="section">
+  <div class="notice green" id="discoverNotice">4 tee-time windows open this evening · 2 courses have member pricing.</div>
+</div>
+
+<div class="section">
+  <div class="secrow">
+    <div class="seclabel">Results</div>
+    <span class="small muted" id="resultCount">18 results</span>
+  </div>
+  <div id="discoverResults" class="list"></div>
+</div>
+
+<div class="section" id="discoverMapWrap">
+  <div class="secrow"><div class="seclabel">Map preview</div><span class="link" onclick="openSheet('map')">Open map</span></div>
+  <div class="card" style="height:180px;overflow:hidden;background:
+    radial-gradient(circle at 30% 35%,#b6d4b0 0 3%,transparent 3.5%),
+    radial-gradient(circle at 67% 58%,#9bc594 0 3%,transparent 3.5%),
+    linear-gradient(135deg,#dce8d5,#f1eadb);position:relative">
+    <div style="position:absolute;left:20%;top:25%;font-size:20px">📍</div>
+    <div style="position:absolute;left:62%;top:51%;font-size:20px">📍</div>
+    <div style="position:absolute;left:42%;top:70%;font-size:20px">📍</div>
+    <div style="position:absolute;right:12px;bottom:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800">2.1 km · 4.7 ★</div>
+  </div>
+</div>
+</section>
+
+<section id="booking" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Booking</div><div class="title">Delhi Golf Club</div><div class="subtitle">Member rate · 18 holes</div></div><button class="icon" onclick="openSheet('course')">ⓘ</button></div></header>
+<div class="section"><div class="segmented" id="bookingType"><button class="sel" onclick="segment(this)">Tee time</button><button onclick="segment(this)">Join open game</button><button onclick="segment(this)">Corporate</button></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Choose date</div></div><div class="grid3"><button class="chip sel" onclick="dateSelect(this)">Thu<br><b>20</b></button><button class="chip" onclick="dateSelect(this)">Fri<br><b>21</b></button><button class="chip" onclick="dateSelect(this)">Sat<br><b>22</b></button></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Morning</div><span class="small muted">2 / 4 players shown</span></div><div class="grid3">
+<button class="chip" onclick="slot(this)">6:30<br>AM</button><button class="chip sel" onclick="slot(this)">7:30<br>AM</button><button class="chip" disabled style="opacity:.4;text-decoration:line-through">8:30<br>AM</button>
+</div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Afternoon</div></div><div class="grid3"><button class="chip" onclick="slot(this)">2:00<br>PM</button><button class="chip" onclick="slot(this)">3:30<br>PM</button><button class="chip" onclick="slot(this)">4:00<br>PM</button></div></div>
+<div class="section"><div class="card pad"><div class="row between"><div><b>7:30 AM open game</b><div class="small muted">2 players already booked · 2 spots open</div></div><span class="pill pblue">Join</span></div><div class="small muted" style="margin-top:9px">Rohit · Vikram · ₹2,500 per player</div></div></div>
+<div class="section"><button class="btn primary full" onclick="openSheet('players')">Continue with 4 players →</button></div>
+</section>
+
+<section id="schedule" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">My golf</div><div class="title">Schedule</div></div><button class="icon" onclick="openSheet('request')">＋</button></div></header>
+<div class="section"><div class="segment"><button class="sel">Upcoming</button><button>Past</button></div></div>
+<div class="section"><div class="grid2">
+<div class="card pad" onclick="show('record')"><b>14.2</b><div class="small muted">Handicap index</div></div>
+<div class="card pad" onclick="show('memberships')"><b>1 active</b><div class="small muted">Membership</div></div>
+<div class="card pad" onclick="show('orders')"><b>3</b><div class="small muted">Recent orders</div></div>
+<div class="card pad" onclick="show('news')"><b>4</b><div class="small muted">Golf updates</div></div>
+</div></div>
+<div class="section"><div class="seclabel">Thursday · 20 Aug</div><div class="card pad" style="margin-top:10px"><div class="schedule-item" onclick="openSheet('bookingDetails')"><div class="time">7:30<br><span>AM</span></div><div class="bar"></div><div style="flex:1"><h3>Delhi Golf Club</h3><p>18 holes · 4 players</p><div style="margin-top:6px"><span class="pill pgreen">Confirmed</span> <span class="pill pblue">₹10,000</span></div></div></div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn secondary" onclick="openSheet('reschedule')">Reschedule</button><button class="btn outline" onclick="openSheet('bookingDetails')">Details</button></div></div></div>
+<div class="section"><div class="seclabel">Monday · 24 Aug</div><div class="card pad" style="margin-top:10px"><div class="schedule-item"><div class="time">10:30<br><span>AM</span></div><div class="bar" style="background:var(--blue)"></div><div><h3>Course Play · Arjun Mehta</h3><p>60 min · Delhi Golf Club</p><span class="pill pblue" style="margin-top:6px">Session request</span></div></div></div></div>
+<div class="section"><div class="seclabel">Tuesday · 25 Aug</div><div class="card pad" style="margin-top:10px"><div class="schedule-item"><div class="time">2:00<br><span>PM</span></div><div class="bar" style="background:var(--amber)"></div><div><h3>Lesson · Short Game</h3><p>60 min · KGA · Arjun Mehta</p><span class="pill pamber" style="margin-top:6px">Awaiting coach</span></div></div></div></div>
+</section>
+
+<section id="lessons" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Improve</div><div class="title">Lessons & coach</div></div><button class="icon" onclick="openSheet('request')">＋</button></div></header>
+<div class="section"><div class="card pad"><div class="row"><div class="avatar">AM</div><div style="flex:1"><b>Arjun Mehta</b><div class="small muted">PGA Professional · 12 yrs · Delhi</div></div><span class="pill pgreen">4.9 ★</span></div><div class="chips" style="margin-top:12px"><span class="pill pblue">Short game</span><span class="pill pblue">Swing</span><span class="pill pblue">Course play</span></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn primary" onclick="openSheet('request')">Request session</button><button class="btn outline" onclick="openSheet('coach')">Profile</button></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Your package</div></div><div class="card pad"><div class="row between"><b>12 Lesson Improvement Pack</b><b>7 / 12</b></div><div class="small muted" style="margin-top:3px">Expires 30 Sep 2026</div><div class="progress"><i style="width:58%"></i></div><div style="margin-top:10px"><span class="pill pred">₹2,000 due</span></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Coach assignments</div><span class="pill pblue">2 open</span></div><div class="card pad list"><label class="listrow"><input type="checkbox" checked onchange="toast('Drill marked complete')"><div><b>20 × 3-foot putts</b><div class="small muted">Assigned 17 Aug · putting</div></div></label><label class="listrow"><input type="checkbox" onchange="toast('Drill marked complete')"><div><b>Slow-motion takeaway drill</b><div class="small muted">Assigned 18 Aug · swing</div></div></label><label class="listrow"><input type="checkbox" onchange="toast('Drill marked complete')"><div><b>9-hole course strategy notes</b><div class="small muted">Assigned 19 Aug · course play</div></div></label></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Latest swing feedback</div><span class="link" onclick="show('feedback')">Open library</span></div><div class="card pad" onclick="show('feedback')"><div class="row"><div style="font-size:28px">🎥</div><div style="flex:1"><b>Driver · takeaway & transition</b><div class="small muted">18 Aug · 3 annotated frames · 0:42 voice note</div></div><span>→</span></div></div></div>
+</section>
+
+<section id="feedback" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Coach library</div><div class="title">Swing feedback</div></div></div></header>
+<div class="section"><div class="grid2">
+<div class="card" style="overflow:hidden;cursor:pointer" onclick="openSheet('feedbackView')"><div style="height:105px;background:linear-gradient(135deg,#20242d,#4a5362);display:grid;place-items:center;font-size:34px">🏌️</div><div class="pad"><b>Driver · takeaway</b><div class="small muted">18 Aug · 3 frames</div></div></div>
+<div class="card" style="overflow:hidden;cursor:pointer" onclick="openSheet('feedbackView')"><div style="height:105px;background:linear-gradient(135deg,#303b31,#697c64);display:grid;place-items:center;font-size:34px">⛳</div><div class="pad"><b>Putting · setup</b><div class="small muted">11 Aug · 2 frames</div></div></div>
+</div></div>
+<div class="section"><div class="card pad"><b>Latest coach note</b><p class="small muted" style="margin-top:6px;line-height:1.5">“Keep the takeaway slower. Your club is getting too far behind you before transition. Feel hands stay in front of chest.”</p><div class="notice green" style="margin-top:10px">Voiceover · 0:42 · Tap a video above to review frame-by-frame.</div></div></div>
+</section>
+
+<section id="range" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Practice</div><div class="title">Driving ranges</div></div></div></header>
+<div class="section"><div class="notice green">Karnail Singh Range · 18% off with your monthly package.</div></div>
+<div class="section"><div class="list">
+<div class="card pad" style="margin-bottom:9px"><div class="row"><div class="avatar" style="background:var(--teal)">🏌️</div><div style="flex:1"><b>Karnail Singh Range</b><div class="small muted">2.8 km · 4.6 ★ · 42 / 60 bays occupied</div></div><span class="pill pgreen">Open</span></div><div class="course-foot"><span class="small muted">Bucket · ₹350</span><button class="btn primary btn" onclick="openSheet('rangeBook')">Book range</button></div></div>
+<div class="card pad"><div class="row"><div class="avatar" style="background:var(--purple)">R</div><div style="flex:1"><b>Qutub Practice Centre</b><div class="small muted">5.7 km · 4.4 ★ · Launch monitors</div></div><span class="pill pblue">12 bays</span></div><div class="course-foot"><span class="small muted">Bay · ₹900 / 60 min</span><button class="btn primary" onclick="openSheet('rangeBook')">Book bay</button></div></div>
+</div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Packages</div></div><div class="grid2"><div class="card pad"><b>Unlimited Balls</b><div class="small muted">Monthly pass</div><h3 style="margin-top:8px">₹2,999</h3><button class="btn outline full" style="margin-top:10px" onclick="toast('Package added to cart')">View</button></div><div class="card pad"><b>10 Bucket Pack</b><div class="small muted">Save 15%</div><h3 style="margin-top:8px">₹2,975</h3><button class="btn outline full" style="margin-top:10px" onclick="toast('Package added to cart')">View</button></div></div></div>
+</section>
+
+<section id="tournaments" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Compete</div><div class="title">Tournaments</div></div></div></header>
+<div class="section"><div class="card pad" style="border:1.5px solid #CFDCFB"><div class="row between"><div><span class="pill pblue">31 AUG</span><h3 style="margin-top:7px">Delhi Amateur Open</h3><div class="small muted">Delhi Golf Club · Stroke play · 96 players</div></div><span style="font-size:28px">🏆</span></div><div class="course-foot"><span class="small muted">Entry ₹4,500 · Handicap required</span><button class="btn primary" onclick="openSheet('tournament')">Register</button></div></div></div>
+<div class="section"><div class="card pad"><div class="row between"><div><span class="pill pgreen">14 SEP</span><h3 style="margin-top:7px">Corporate Invitational</h3><div class="small muted">Classic Golf Resort · Team format</div></div><span class="pill pamber">4 spots</span></div><div class="course-foot"><span class="small muted">₹7,500 / player</span><button class="btn outline" onclick="openSheet('tournament')">Details</button></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">My tournament</div></div><div class="card pad"><div class="row"><div class="avatar">DO</div><div><b>Delhi Amateur Open</b><div class="small muted">Registration confirmed · Tee 08:10 AM</div></div></div><div class="notice green" style="margin-top:11px">Draw sheet will be published 29 Aug.</div></div></div>
+</section>
+
+<section id="shop" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Equipment</div><div class="title">Golf shop</div></div><button class="icon" onclick="toast('Cart: 2 items')">🛒</button></div></header>
+<div class="section"><div class="chips"><button class="chip sel">Featured</button><button class="chip">Drivers</button><button class="chip">Irons</button><button class="chip">Putters</button><button class="chip">Shoes</button><button class="chip">Balls</button></div></div>
+<div class="section"><div class="grid2">
+<div class="card pad"><div style="height:105px;background:#F2F2F0;border-radius:12px;display:grid;place-items:center;font-size:42px">🏌️</div><div style="margin-top:10px"><b>Ping G440 Driver</b><div class="small muted">Golf House Delhi</div><div class="course-foot"><b>₹52,000</b><span class="pill pgreen">In stock</span></div><button class="btn primary full" style="margin-top:9px" onclick="toast('Added Ping G440 to cart')">Add</button></div></div>
+<div class="card pad"><div style="height:105px;background:#F2F2F0;border-radius:12px;display:grid;place-items:center;font-size:42px">⛳</div><div style="margin-top:10px"><b>Odyssey Ai-One Putter</b><div class="small muted">DGC Pro Shop</div><div class="course-foot"><b>₹31,500</b><span class="pill pgreen">In stock</span></div><button class="btn primary full" style="margin-top:9px" onclick="toast('Added Odyssey putter to cart')">Add</button></div></div>
+</div></div>
+<div class="section"><div class="card pad" onclick="openSheet('fitting')"><div class="row"><div style="font-size:28px">📐</div><div style="flex:1"><b>Book a club fitting</b><div class="small muted">Driver · irons · putter · full bag</div></div><span>→</span></div></div></div>
+</section>
+
+<section id="memberships" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">My golf</div><div class="title">Memberships & perks</div></div></div></header>
+<div class="section"><div class="card pad" style="border:1.5px solid #A9E3C9"><div class="row between"><div><span class="pill pgreen">ACTIVE</span><h3 style="margin-top:7px">Delhi Golf Club · Associate</h3><div class="small muted">Valid until 31 Mar 2027</div></div><div style="font-size:28px">🪪</div></div><div class="grid3" style="margin-top:13px"><div><b>15%</b><div class="tiny muted">Green fee</div></div><div><b>Free</b><div class="tiny muted">Range access</div></div><div><b>Member</b><div class="tiny muted">Tee windows</div></div></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Saved benefits</div></div><div class="list card pad"><div class="listrow"><span>✓</span><div style="flex:1"><b>Member-rate tee times</b><div class="small muted">Automatically applied during booking</div></div></div><div class="listrow"><span>✓</span><div style="flex:1"><b>Course notices</b><div class="small muted">Maintenance and event alerts enabled</div></div></div><div class="listrow"><span>✓</span><div style="flex:1"><b>Renewal</b><div class="small muted">₹12,500 due by 31 Mar 2027</div></div><button class="btn outline" onclick="toast('Renewal flow opened')">Pay</button></div></div></div>
+<div class="section"><div class="card pad"><b>Loyalty</b><div class="small muted" style="margin-top:3px">You've earned 740 BMG points.</div><div class="progress"><i style="width:74%"></i></div><div class="small muted" style="margin-top:7px">260 points to ₹500 booking credit.</div></div></div>
+</section>
+
+<section id="record" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">My golf</div><div class="title">Scores & handicap</div></div><button class="icon" onclick="openSheet('score')">＋</button></div></header>
+<div class="section"><div class="statgrid"><div class="stat"><b>14.2</b><span>Handicap</span></div><div class="stat"><b>91</b><span>Last score</span></div><div class="stat"><b>87</b><span>Best 2026</span></div></div></div>
+<div class="section"><div class="card pad"><div class="row between"><div><b>Handicap trend</b><div class="small muted">Last 6 rounds</div></div><span class="pill pgreen">↓ 1.8</span></div><div style="height:80px;margin-top:10px;display:flex;align-items:flex-end;gap:7px"><i style="height:55%;flex:1;background:#B9DEC8;border-radius:5px"></i><i style="height:72%;flex:1;background:#9ED0B4;border-radius:5px"></i><i style="height:61%;flex:1;background:#8BC7A7;border-radius:5px"></i><i style="height:49%;flex:1;background:#6EBA94;border-radius:5px"></i><i style="height:40%;flex:1;background:#4FAE80;border-radius:5px"></i><i style="height:31%;flex:1;background:var(--green);border-radius:5px"></i></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Recent rounds</div></div><div class="card pad list"><div class="listrow"><div class="avatar">91</div><div style="flex:1"><b>Delhi Golf Club</b><div class="small muted">18 Aug · 18 holes · 91 gross</div></div><span class="pill pgreen">+1.2</span></div><div class="listrow"><div class="avatar">89</div><div style="flex:1"><b>Noida Golf Course</b><div class="small muted">10 Aug · 18 holes · 89 gross</div></div><span class="pill pgreen">-0.8</span></div><div class="listrow"><div class="avatar">94</div><div style="flex:1"><b>Qutub Golf Course</b><div class="small muted">02 Aug · 18 holes · 94 gross</div></div><span class="pill pamber">+0.4</span></div></div></div>
+</section>
+
+<section id="profile" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Account</div><div class="title">Profile</div></div><button class="icon" onclick="openSheet('profileEdit')">✎</button></div></header>
+<div class="section"><div class="row"><div class="avatar" style="width:64px;height:64px;font-size:22px">AK</div><div><h2 style="font-size:19px">Arjun Kapoor</h2><div class="small muted">arjun.k@example.com</div><div style="margin-top:5px"><span class="pill pteal">Amateur</span> <span class="pill pgreen">HCP 14.2</span></div></div></div></div>
+<div class="section"><div class="statgrid"><div class="stat"><b>37</b><span>Rounds</span></div><div class="stat"><b>12</b><span>Lessons</span></div><div class="stat"><b>4.8</b><span>Reviews</span></div></div></div>
+<div class="section"><div class="card pad list">
+<div class="listrow" onclick="show('memberships')"><span>🪪</span><div style="flex:1"><b>My memberships</b><div class="small muted">1 active membership</div></div><span>→</span></div>
+<div class="listrow" onclick="show('record')"><span>🏌️</span><div style="flex:1"><b>Scores & handicap</b><div class="small muted">14.2 handicap index</div></div><span>→</span></div>
+<div class="listrow" onclick="show('shop')"><span>🛍️</span><div style="flex:1"><b>Orders & receipts</b><div class="small muted">3 recent purchases</div></div><span>→</span></div>
+<div class="listrow" onclick="show('wallet')"><span>💳</span><div style="flex:1"><b>Wallet & payments</b><div class="small muted">₹1,740 available credits</div></div><span>→</span></div>
+<div class="listrow" onclick="show('news')"><span>📰</span><div style="flex:1"><b>Golf news</b><div class="small muted">India · Tour · Coaching</div></div><span>→</span></div>
+<div class="listrow" onclick="show('corporate')"><span>🤝</span><div style="flex:1"><b>Corporate golf</b><div class="small muted">Group bookings and client events</div></div><span>→</span></div>
+<div class="listrow" onclick="show('courseUpdates')"><span>📣</span><div style="flex:1"><b>Followed courses</b><div class="small muted">1 course · 4 recent updates</div></div><span>→</span></div>
+<div class="listrow" onclick="show('caddymaster')"><span>🎒</span><div style="flex:1"><b>Caddy directory</b><div class="small muted">18 available at DGC</div></div><span>→</span></div>
+<div class="listrow" onclick="show('rental')"><span>🧳</span><div style="flex:1"><b>Rental clubs</b><div class="small muted">3 sets available nearby</div></div><span>→</span></div>
+<div class="listrow" onclick="show('launch')"><span>📡</span><div style="flex:1"><b>Launch monitors</b><div class="small muted">7 bays available</div></div><span>→</span></div>
+<div class="listrow" onclick="openSheet('notifications')"><span>🔔</span><div style="flex:1"><b>Notifications</b><div class="small muted">Course, coach and booking updates</div></div><span>3</span></div>
+<div class="listrow" onclick="toast('Settings opened')"><span>⚙️</span><div style="flex:1"><b>Settings</b><div class="small muted">Payments, privacy, preferences</div></div><span>→</span></div>
+</div></div>
+</section>
+
+<section id="orders" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Account</div><div class="title">Orders & receipts</div></div><button class="icon" onclick="toast('No pending payments')">₹</button></div></header>
+<div class="section"><div class="segment"><button class="sel">All</button><button>Equipment</button><button>Lessons</button><button>Golf</button></div></div>
+<div class="section"><div class="card pad"><div class="row"><div class="avatar">⛳</div><div style="flex:1"><b>Delhi Golf Club</b><div class="small muted">20 Aug · Tee time · DGC-48213</div><div style="margin-top:5px"><span class="pill pgreen">Paid</span></div></div><b>₹10,529</b></div><button class="btn outline full" style="margin-top:10px" onclick="openSheet('receipt')">View receipt</button></div></div>
+<div class="section"><div class="card pad"><div class="row"><div class="avatar" style="background:#555">🏌️</div><div style="flex:1"><b>Ping G440 Driver</b><div class="small muted">Golf House Delhi · 12 Aug</div><div style="margin-top:5px"><span class="pill pgreen">Delivered</span></div></div><b>₹52,000</b></div><button class="btn outline full" style="margin-top:10px" onclick="openSheet('receipt')">Invoice</button></div></div>
+<div class="section"><div class="card pad"><div class="row"><div class="avatar" style="background:var(--blue)">AM</div><div style="flex:1"><b>Lesson package</b><div class="small muted">Arjun Mehta · 12 lessons</div><div style="margin-top:5px"><span class="pill pgreen">7 sessions used</span></div></div><b>₹21,600</b></div></div></div>
+</section>
+
+<section id="news" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Stay current</div><div class="title">Golf news</div></div><button class="icon" onclick="openSheet('newsPrefs')">⚙</button></div></header>
+<div class="section"><div class="chips"><button class="chip sel">For you</button><button class="chip">India</button><button class="chip">Tour</button><button class="chip">Coaching</button><button class="chip">Courses</button></div></div>
+<div class="section"><div class="card" style="overflow:hidden"><div class="photo">🏆</div><div class="pad"><span class="pill pblue">TOURNAMENT</span><h3 style="margin-top:7px">Delhi Amateur Open announces 2026 draw format</h3><p class="small muted" style="margin-top:5px;line-height:1.45">96-player field, two qualifying flights and a final round at Delhi Golf Club.</p><div class="small muted" style="margin-top:8px">Today · 4 min read</div></div></div></div>
+<div class="section"><div class="card pad"><div class="feed"><div style="font-size:25px">🎓</div><div><h3>3 ways to control a fast transition</h3><p>Coach Arjun explains how tempo affects face control.</p><span class="small muted">Coaching · 3 min</span></div></div><div class="feed"><div style="font-size:25px">⛳</div><div><h3>DGC maintenance notice</h3><p>Second nine opens late every Tuesday morning.</p><span class="small muted">Course update · 1 min</span></div></div><div class="feed"><div style="font-size:25px">🌍</div><div><h3>Weekend golf: five amateur events</h3><p>Open registrations across Delhi NCR.</p><span class="small muted">Events · 5 min</span></div></div></div></div>
+</section>
+
+<section id="caddymaster" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Booking add-on</div><div class="title">Caddy directory</div></div><button class="icon" onclick="openSheet('caddyRules')">?</button></div></header>
+<div class="section"><div class="kpi4"><div class="card"><b>18</b><span>Available</span></div><div class="card"><b>7</b><span>Booked</span></div><div class="card"><b>4.7</b><span>Avg rating</span></div><div class="card"><b>₹320</b><span>From</span></div></div></div>
+<div class="section"><div class="chips"><button class="chip sel">Available</button><button class="chip">Top rated</button><button class="chip">Strategy</button><button class="chip">Beginners</button></div></div>
+<div class="section"><div class="list card pad">
+<div class="listrow"><div class="avatar">RK</div><div style="flex:1"><b>Ramesh Kumar</b><div class="stars">★★★★★ <span class="small muted">4.9 · 184 reviews</span></div><div class="small muted">Course strategy · 9 years</div></div><span class="pill pgreen">₹350</span><button class="btn outline" onclick="toast('Ramesh selected')">Select</button></div>
+<div class="listrow"><div class="avatar">SY</div><div style="flex:1"><b>Suresh Yadav</b><div class="stars">★★★★☆ <span class="small muted">4.5 · 91 reviews</span></div><div class="small muted">Beginners · 6 years</div></div><span class="pill pgreen">₹300</span><button class="btn outline" onclick="toast('Suresh selected')">Select</button></div>
+<div class="listrow"><div class="avatar">MP</div><div style="flex:1"><b>Manoj Prasad</b><div class="stars">★★★★★ <span class="small muted">4.8 · 136 reviews</span></div><div class="small muted">Reading greens · 11 years</div></div><span class="pill pamber">Booked</span></div>
+</div></div>
+</section>
+
+<section id="corporate" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Group golf</div><div class="title">Corporate golf</div></div><button class="icon" onclick="openSheet('corporate')">＋</button></div></header>
+<div class="section"><div class="card pad" style="background:linear-gradient(135deg,#152d24,#2f7355);color:#fff"><span class="pill" style="background:#ffffff20;color:#fff">CORPORATE</span><h2 style="font-size:21px;margin-top:9px">Host clients without the admin.</h2><p style="font-size:11px;opacity:.8;margin-top:5px">One booking, guest management, add-ons and one consolidated invoice.</p><button class="btn" style="margin-top:13px;background:#fff;color:var(--green2)" onclick="openSheet('corporate')">Plan a group</button></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Upcoming groups</div></div><div class="card pad"><table class="table"><tr><th>Event</th><th>Players</th><th>Status</th></tr><tr><td>Acme Client Day</td><td>16</td><td><span class="pill pgreen">Confirmed</span></td></tr><tr><td>Northstar Partners</td><td>8</td><td><span class="pill pamber">Awaiting</span></td></tr><tr><td>Founder Cup</td><td>24</td><td><span class="pill pblue">Draft</span></td></tr></table></div></div>
+<div class="section"><div class="grid2"><div class="card pad"><b>Guest add-ons</b><div class="small muted" style="margin-top:4px">Caddies · carts · rental clubs</div></div><div class="card pad"><b>Consolidated invoice</b><div class="small muted" style="margin-top:4px">One receipt for finance</div></div></div></div>
+</section>
+
+<section id="courseUpdates" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Following</div><div class="title">Course updates</div></div></div></header>
+<div class="section"><div class="card pad"><div class="row"><div class="avatar">⛳</div><div style="flex:1"><b>Delhi Golf Club</b><div class="small muted">Following · 2.1 km</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div></div></div>
+<div class="section"><div class="timeline">
+<div class="tl"><h4>18 Aug · Temporary hole closure</h4><p>Hole 7 closed 2–4 PM for drainage work. Normal tee time availability adjusted.</p></div>
+<div class="tl"><h4>15 Aug · Member event</h4><p>Independence Day Cup completed. Results published in tournament feed.</p></div>
+<div class="tl"><h4>10 Aug · Range update</h4><p>New ball machine installed at the practice range.</p></div>
+<div class="tl"><h4>02 Aug · Restaurant</h4><p>New post-round menu available from the clubhouse.</p></div>
+</div></div>
+<div class="section"><button class="btn secondary full" onclick="openSheet('followPrefs')">Manage notification preferences</button></div>
+</section>
+
+<section id="launch" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Practice technology</div><div class="title">Launch monitor</div></div></div></header>
+<div class="section"><div class="card pad"><div class="row between"><div><b>Qutub Practice Centre</b><div class="small muted">12 bays · TrackMan · 5.7 km</div></div><span class="pill pgreen">7 available</span></div><div class="grid3" style="margin-top:12px"><div class="card pad" style="text-align:center"><b>₹900</b><div class="tiny muted">60 min</div></div><div class="card pad" style="text-align:center"><b>₹1,250</b><div class="tiny muted">90 min</div></div><div class="card pad" style="text-align:center"><b>₹2,000</b><div class="tiny muted">Coach</div></div></div><button class="btn primary full" style="margin-top:12px" onclick="openSheet('launchBook')">Book a bay</button></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Latest session</div></div><div class="card pad"><div class="row between"><div><b>Driver session · 18 Aug</b><div class="small muted">42 shots · 251 yd average</div></div><span class="pill pblue">Report</span></div><div class="grid3" style="margin-top:11px"><div><b>251</b><div class="tiny muted">Carry yd</div></div><div><b>154</b><div class="tiny muted">Ball speed</div></div><div><b>14.2°</b><div class="tiny muted">Launch</div></div></div></div></div>
+</section>
+
+<section id="rental" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Equipment rental</div><div class="title">Rental clubs</div></div></div></header>
+<div class="section"><div class="notice blue">Rental sets are reserved during checkout and held for 30 minutes after your tee time.</div></div>
+<div class="section"><div class="list card pad">
+<div class="listrow"><div class="avatar">D</div><div style="flex:1"><b>TaylorMade Qi10 Set</b><div class="small muted">Men's · Right hand · 4-PW</div></div><div><b>₹2,500</b><div class="small muted">/ round</div></div><button class="btn outline" onclick="toast('Qi10 set added')">Add</button></div>
+<div class="listrow"><div class="avatar" style="background:var(--purple)">C</div><div style="flex:1"><b>Callaway Paradym Set</b><div class="small muted">Men's · Right hand · 5-SW</div></div><div><b>₹2,200</b><div class="small muted">/ round</div></div><button class="btn outline" onclick="toast('Paradym set added')">Add</button></div>
+<div class="listrow"><div class="avatar" style="background:var(--teal)">J</div><div style="flex:1"><b>Junior Starter Set</b><div class="small muted">Age 10–14 · Right hand</div></div><div><b>₹1,200</b><div class="small muted">/ round</div></div><button class="btn outline" onclick="toast('Junior set added')">Add</button></div>
+</div></div>
+</section>
+
+<section id="wallet" class="screen">
+<header><div class="hrow"><div><div class="eyebrow">Payments</div><div class="title">Wallet & credits</div></div><button class="icon" onclick="openSheet('addMoney')">＋</button></div></header>
+<div class="section"><div class="card pad" style="background:linear-gradient(135deg,#15161a,#34363b);color:#fff"><div class="small" style="opacity:.7">Available credits</div><div style="font-size:30px;font-weight:800;margin-top:5px">₹1,740</div><div class="small" style="opacity:.7;margin-top:5px">BMG Wallet · 740 loyalty points</div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Payment methods</div></div><div class="card pad list"><div class="listrow"><span>📱</span><div style="flex:1"><b>UPI · arjun@upi</b><div class="small muted">Default</div></div><span class="pill pgreen">Active</span></div><div class="listrow"><span>💳</span><div style="flex:1"><b>HDFC Visa · •••• 4218</b><div class="small muted">Expires 09/29</div></div><span>→</span></div></div></div>
+<div class="section"><div class="secrow"><div class="seclabel">Recent wallet activity</div></div><div class="card pad"><div class="row between"><span>Booking credit</span><b>+₹500</b></div><div class="row between" style="margin-top:9px"><span>Lesson payment</span><b>-₹2,000</b></div><div class="row between" style="margin-top:9px"><span>Reward</span><b>+240 pts</b></div></div></div>
+</section>
+
+</main>
+
+<nav class="nav">
+<button data-tab="home" class="active" onclick="show('home')"><span class="ni">⌂</span>Home</button>
+<button data-tab="discover" onclick="show('discover')"><span class="ni">⌕</span>Discover</button>
+<button data-tab="schedule" onclick="show('schedule')"><span class="ni">◫</span>My golf</button>
+<button data-tab="lessons" onclick="show('lessons')"><span class="ni">♧</span>Coach</button>
+<button data-tab="profile" onclick="show('profile')"><span class="ni">◯</span>Profile</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<div id="sheet" class="sheetbg" onclick="if(event.target===this)closeSheet()">
+<div class="sheet" id="sheetContent"></div>
+</div>
+</div>
+
+<script>
+const S=document.getElementById('sheetContent'), SB=document.getElementById('sheet');
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+ document.getElementById('main').scrollTop=0;
+}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+function closeSheet(){SB.classList.remove('open')}
+function openSheet(type){
+ const data={
+ notifications:`<div class="handle"></div><h2>Notifications</h2><div class="list">
+ <div class="listrow"><span>🌧️</span><div><b>Weather update</b><div class="small muted">Rain expected tomorrow evening at DGC.</div></div></div>
+ <div class="listrow"><span>🎥</span><div><b>New swing feedback</b><div class="small muted">Arjun added 3 frames and a voice note.</div></div></div>
+ <div class="listrow"><span>🪪</span><div><b>Membership benefit</b><div class="small muted">Your member rate saved ₹700.</div></div></div></div><button class="btn secondary full" onclick="closeSheet()">Done</button>`,
+ course:`<div class="handle"></div><h2>Delhi Golf Club</h2><div class="card pad"><b>18 holes · 2.1 km</b><div class="small muted" style="margin-top:5px">4.7 ★ · Member and guest rates · Caddies · carts · pro shop · restaurant</div></div><div class="notice green" style="margin-top:12px">Maintenance: 2nd nine closed 6–8 AM every Tuesday.</div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="closeSheet();show('booking')">Book tee time</button></div>`,
+ players:`<div class="handle"></div><h2>Players</h2><div class="field"><label>Host</label><div class="card pad"><b>You · Arjun Kapoor</b></div></div><div class="field"><label>Add players</label><input id="friend" placeholder="Name or phone number"></div><div class="card pad"><div class="row"><div class="avatar">RK</div><div style="flex:1"><b>Rohit Sharma</b><div class="small muted">Invite pending</div></div><span>✓</span></div><div class="row" style="margin-top:12px"><div class="avatar" style="background:var(--purple)">VS</div><div style="flex:1"><b>Vikram Singh</b><div class="small muted">Confirmed</div></div><span>✓</span></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Back</button><button class="btn primary" onclick="closeSheet();openSheet('addons')">Continue</button></div>`,
+ addons:`<div class="handle"></div><h2>Caddy & cart</h2><div class="field"><label>Caddy</label><div class="segment"><button class="sel">Auto-assign · ₹320</button><button onclick="toast('Manual caddy list')">Choose</button></div></div><div class="card pad list"><div class="listrow"><div class="avatar">RK</div><div style="flex:1"><b>Ramesh Kumar</b><div class="small muted">4.9 ★ · Course strategy · ₹350</div></div><span class="pill pgreen">Available</span></div><div class="listrow"><div class="avatar">SY</div><div style="flex:1"><b>Suresh Yadav</b><div class="small muted">4.5 ★ · Beginners · ₹300</div></div><span class="pill pgreen">Available</span></div></div><div class="field"><label>Golf cart</label><div class="segment"><button class="sel">No cart</button><button onclick="segment(this)">1 · ₹800</button><button onclick="segment(this)">2 · ₹1,600</button></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Back</button><button class="btn primary" onclick="closeSheet();openSheet('payment')">Review payment</button></div>`,
+ payment:`<div class="handle"></div><h2>Review & pay</h2><div class="card pad"><div class="row between"><div><b>Delhi Golf Club</b><div class="small muted">Thu 20 Aug · 7:30 AM · 4 players</div></div><span class="pill pgreen">Member rate</span></div><hr style="border:0;border-top:1px solid var(--line);margin:12px 0"><div class="row between"><span>Green fee × 4</span><b>₹9,200</b></div><div class="row between" style="margin-top:8px"><span>Caddies × 4</span><b>₹1,280</b></div><div class="row between" style="margin-top:8px"><span>Platform fee</span><b>₹49</b></div><div class="row between" style="margin-top:12px;padding-top:11px;border-top:1px solid var(--line)"><b>Total</b><b>₹10,529</b></div></div><div class="field"><label>Pay with</label><div class="segment"><button class="sel">UPI</button><button>Card</button></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Back</button><button class="btn primary" onclick="closeSheet();openSheet('confirmed')">Pay ₹10,529</button></div>`,
+ confirmed:`<div class="handle"></div><div style="text-align:center;padding:10px 0 4px"><div style="font-size:48px">✓</div><h2>Tee time confirmed</h2><p class="small muted">Delhi Golf Club · Thu 20 Aug · 7:30 AM</p></div><div class="card pad" style="margin-top:12px;text-align:center"><span class="small muted">BOOKING ID</span><h3 style="margin:5px">DGC-48213</h3><div style="font-size:58px;margin:9px">▦</div><span class="small muted">Show QR at starter's desk</span></div><div class="actions"><button class="btn primary full" onclick="closeSheet();show('schedule')">View my schedule</button></div>`,
+ reschedule:`<div class="handle"></div><h2>Reschedule booking</h2><div class="notice amber">Free reschedule until 7:30 PM today. After the cutoff, 50% of the green fee is charged.</div><div class="field"><label>New date</label><select><option>Friday · 21 Aug</option><option>Saturday · 22 Aug</option><option>Sunday · 23 Aug</option></select></div><div class="field"><label>New time</label><select><option>7:00 AM</option><option>7:30 AM</option><option>8:00 AM</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Keep booking</button><button class="btn primary" onclick="closeSheet();toast('Booking rescheduled')">Confirm change</button></div>`,
+ bookingDetails:`<div class="handle"></div><h2>Booking DGC-48213</h2><div class="card pad"><b>Delhi Golf Club</b><div class="small muted">Thu 20 Aug · 7:30 AM · 18 holes</div><div style="margin-top:9px"><span class="pill pgreen">Confirmed</span></div></div><div class="list" style="margin-top:10px"><div class="listrow"><span>👤</span><div><b>Arjun Kapoor</b><div class="small muted">Host</div></div></div><div class="listrow"><span>👤</span><div><b>Rohit Sharma</b><div class="small muted">Confirmed</div></div></div><div class="listrow"><span>👤</span><div><b>Vikram Singh</b><div class="small muted">Confirmed</div></div></div><div class="listrow"><span>🎒</span><div><b>Ramesh Kumar</b><div class="small muted">Caddy · ₹350</div></div></div></div><button class="btn secondary full" onclick="closeSheet()">Close</button>`,
+ request:`<div class="handle"></div><h2>Request a lesson</h2><div class="field"><label>Coach</label><select><option>Arjun Mehta · ₹2,000/hr</option><option>Rohit Kapoor · ₹1,500/hr</option></select></div><div class="field"><label>Session type</label><select><option>Short Game · 60 min</option><option>Course Play · 60 min</option><option>Driver & Swing · 60 min</option></select></div><div class="field"><label>Preferred day</label><select><option>Monday · 24 Aug</option><option>Tuesday · 25 Aug</option><option>Wednesday · 26 Aug</option></select></div><div class="field"><label>Location</label><select><option>Karnail Singh Range</option><option>Delhi Golf Club</option><option>Coach location</option></select></div><div class="field"><label>Notes</label><input placeholder="What do you want to work on?"></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Session request sent to Arjun')">Send request</button></div>`,
+ coach:`<div class="handle"></div><div class="row"><div class="avatar" style="width:58px;height:58px">AM</div><div><h2 style="margin:0">Arjun Mehta</h2><div class="small muted">PGA Professional · Delhi · 12 years</div><span class="pill pgreen" style="margin-top:5px">4.9 ★ · 128 reviews</span></div></div><div class="section" style="margin:16px 0 0"><b>Specialties</b><div class="chips" style="margin-top:8px"><span class="pill pblue">Short game</span><span class="pill pblue">Swing</span><span class="pill pblue">Course play</span></div></div><div class="card pad" style="margin-top:14px"><div class="row between"><span>Single lesson</span><b>₹2,000</b></div><div class="row between" style="margin-top:8px"><span>12-lesson pack</span><b>₹21,600</b></div><div class="row between" style="margin-top:8px"><span>Trial lesson</span><b>₹999</b></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="closeSheet();openSheet('request')">Request session</button></div>`,
+ feedbackView:`<div class="handle"></div><h2>Driver · takeaway</h2><div class="small muted">18 Aug · Arjun Mehta</div><div style="height:230px;background:#20242d;border-radius:15px;margin-top:12px;display:grid;place-items:center;color:#fff;font-size:72px">🏌️</div><div class="chips" style="margin-top:10px"><button class="chip sel">Setup</button><button class="chip">Takeaway</button><button class="chip">Top</button></div><div class="card pad" style="margin-top:12px"><b>Coach voice note · 0:42</b><p class="small muted" style="margin-top:6px;line-height:1.5">Slow the takeaway. Keep the club more in front of your chest before transition.</p><button class="btn secondary full" style="margin-top:10px" onclick="toast('Playing coach voiceover…')">▶ Play voiceover</button></div><button class="btn primary full" style="margin-top:12px" onclick="closeSheet()">Done</button>`,
+ rangeBook:`<div class="handle"></div><h2>Book practice</h2><div class="field"><label>Facility</label><select><option>Karnail Singh Range</option><option>Qutub Practice Centre</option></select></div><div class="field"><label>Session</label><select><option>60 min · 1 bucket · ₹650</option><option>90 min · 2 buckets · ₹1,050</option><option>Launch monitor · ₹900</option></select></div><div class="field"><label>Time</label><select><option>Today · 7:00 PM</option><option>Today · 8:00 PM</option><option>Tomorrow · 7:00 AM</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Range session booked')">Book</button></div>`,
+ tournament:`<div class="handle"></div><h2>Delhi Amateur Open</h2><div class="card pad"><b>31 Aug · Delhi Golf Club</b><div class="small muted">Stroke play · 96 players · Handicap required</div><div class="row between" style="margin-top:10px"><span>Entry fee</span><b>₹4,500</b></div></div><div class="field"><label>Handicap</label><input value="14.2"></div><div class="field"><label>Registration</label><select><option>Individual</option><option>Corporate team</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Tournament registration confirmed')">Register</button></div>`,
+ fitting:`<div class="handle"></div><h2>Club fitting</h2><div class="field"><label>Clubs</label><select><option>Driver</option><option>Irons</option><option>Putter</option><option>Full bag</option></select></div><div class="field"><label>Preferred provider</label><select><option>DGC Pro Shop · ₹1,500</option><option>Golf House Delhi · ₹2,000</option></select></div><div class="field"><label>Notes</label><input placeholder="e.g. slice, launch too high, new irons"></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Fitting request sent')">Request fitting</button></div>`,
+ profileEdit:`<div class="handle"></div><h2>Edit profile</h2><div class="field"><label>Name</label><input value="Arjun Kapoor"></div><div class="field"><label>Email</label><input value="arjun.k@example.com"></div><div class="field"><label>Playing level</label><select><option>Amateur</option><option>Junior</option><option>Professional</option><option>Casual</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Profile saved')">Save</button></div>`,
+ score:`<div class="handle"></div><h2>Post a score</h2><div class="field"><label>Course</label><select><option>Delhi Golf Club</option><option>Qutub Golf Course</option></select></div><div class="field"><label>Date</label><input type="date" value="2026-08-19"></div><div class="field"><label>Gross score</label><input type="number" value="91"></div><div class="field"><label>Holes</label><select><option>18</option><option>9</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Score posted · handicap recalculated')">Post score</button></div>`,
+ filters:`<div class="handle"></div><h2>Discover filters</h2><div class="field"><label>Distance</label><select><option>Within 10 km</option><option>Within 25 km</option><option>Anywhere in Delhi NCR</option></select></div><div class="field"><label>Price</label><select><option>Any</option><option>Under ₹2,000</option><option>₹2,000–₹4,000</option><option>₹4,000+</option></select></div><div class="field"><label>Facilities</label><div class="chips"><span class="chip sel">Caddy</span><span class="chip">Cart</span><span class="chip">Range</span><span class="chip">Pro shop</span></div></div><button class="btn primary full" onclick="closeSheet();toast('Filters applied')">Apply filters</button>`
+ };
+ if(type==='receipt') data.receipt=`<div class="handle"></div><h2>Receipt</h2><div class="card pad"><div class="row between"><div><b>BookMyGolf</b><div class="small muted">Receipt · DGC-48213</div></div><span class="pill pgreen">PAID</span></div><hr style="border:0;border-top:1px solid var(--line);margin:12px 0"><div class="row between"><span>Green fees</span><b>₹9,200</b></div><div class="row between" style="margin-top:7px"><span>Caddies</span><b>₹1,280</b></div><div class="row between" style="margin-top:7px"><span>Platform fee</span><b>₹49</b></div><div class="row between" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)"><b>Total</b><b>₹10,529</b></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="toast('Receipt downloaded')">Download PDF</button></div>`;
+if(type==='corporate') data.corporate=`<div class="handle"></div><h2>Corporate booking</h2><div class="field"><label>Event name</label><input value="Acme Client Day"></div><div class="field"><label>Course</label><select><option>Delhi Golf Club</option><option>Noida Golf Course</option></select></div><div class="field"><label>Players</label><input type="number" value="16"></div><div class="field"><label>Event date</label><input type="date" value="2026-09-12"></div><div class="field"><label>Add-ons</label><div class="chips"><span class="chip sel">Caddies</span><span class="chip sel">Carts</span><span class="chip">Rental clubs</span></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Corporate booking request created')">Create request</button></div>`;
+if(type==='launchBook') data.launchBook=`<div class="handle"></div><h2>Book launch monitor</h2><div class="field"><label>Mode</label><div class="segment"><button class="sel">Solo</button><button>With coach</button><button>Fitting</button></div></div><div class="field"><label>Duration</label><select><option>60 min · ₹900</option><option>90 min · ₹1,250</option></select></div><div class="field"><label>Time</label><select><option>Today · 7:00 PM</option><option>Today · 8:30 PM</option><option>Tomorrow · 8:00 AM</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Launch monitor booked')">Book bay</button></div>`;
+if(type==='addMoney') data.addMoney=`<div class="handle"></div><h2>Add wallet credit</h2><div class="grid3"><button class="chip" onclick="toast('₹500 selected')">₹500</button><button class="chip" onclick="toast('₹1,000 selected')">₹1,000</button><button class="chip" onclick="toast('₹2,000 selected')">₹2,000</button></div><div class="field"><label>Custom amount</label><input type="number" placeholder="₹"></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Wallet top-up started')">Continue to UPI</button></div>`;
+if(type==='newsPrefs') data.newsPrefs=`<div class="handle"></div><h2>News preferences</h2><div class="list"><div class="listrow"><div style="flex:1"><b>India golf</b><div class="small muted">Local events and course updates</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="listrow"><div style="flex:1"><b>Tour updates</b><div class="small muted">International professional golf</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="listrow"><div style="flex:1"><b>Coaching</b><div class="small muted">Tips from verified coaches</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div></div><button class="btn primary full" onclick="closeSheet()">Save</button>`;
+if(type==='followPrefs') data.followPrefs=`<div class="handle"></div><h2>Course notifications</h2><div class="list"><div class="listrow"><div style="flex:1"><b>Closures</b><div class="small muted">Full or partial course closure</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="listrow"><div style="flex:1"><b>Maintenance</b><div class="small muted">Planned maintenance windows</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="listrow"><div style="flex:1"><b>Events</b><div class="small muted">Tournaments and member events</div></div><div class="switch on" onclick="this.classList.toggle('on')"><i></i></div></div></div><button class="btn primary full" onclick="closeSheet()">Save</button>`;
+if(type==='caddyRules') data.caddyRules=`<div class="handle"></div><h2>Caddy booking</h2><div class="notice blue">Caddies can be auto-assigned or selected manually. Availability and fee are confirmed against the course roster at checkout.</div><div class="list" style="margin-top:10px"><div class="listrow"><b>Auto-assign</b><span style="margin-left:auto">Best available</span></div><div class="listrow"><b>Manual</b><span style="margin-left:auto">Choose by rating/specialty</span></div><div class="listrow"><b>Payment</b><span style="margin-left:auto">Prepay or pay on course</span></div></div><button class="btn primary full" onclick="closeSheet()">Done</button>`;
+data.course=data.course;
+
+if(type==='discoverCourse') data.discoverCourse=`<div class="handle"></div><div class="row"><div class="avatar">⛳</div><div><h2 id="dsTitle" style="margin:0">Course</h2><div id="dsMeta" class="small muted"></div></div></div><div class="card pad" style="margin-top:13px"><b>About</b><p id="dsDetail" class="small muted" style="margin-top:5px;line-height:1.5"></p><div class="row between" style="margin-top:12px"><span>Starting tee fee</span><b id="dsPrice"></b></div></div><div class="grid2" style="margin-top:10px"><button class="btn outline" onclick="toast('Course saved')">♡ Save</button><button class="btn outline" onclick="toast('Directions opened')">↗ Directions</button></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="closeSheet();show('booking')">Book tee time</button></div>`;
+if(type==='discoverCoach') data.discoverCoach=`<div class="handle"></div><div class="row"><div class="avatar" style="width:58px;height:58px">AM</div><div><h2 id="dcTitle" style="margin:0">Coach</h2><div id="dcMeta" class="small muted"></div></div></div><div class="card pad" style="margin-top:13px"><b>Specialties</b><p id="dcDetail" class="small muted" style="margin-top:5px"></p><div class="row between" style="margin-top:12px"><span>Lesson rate</span><b id="dcPrice"></b></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="closeSheet();openSheet('request')">Request session</button></div>`;
+if(type==='discoverRange') data.discoverRange=`<div class="handle"></div><div class="row"><div class="avatar" style="background:var(--teal)">🏌️</div><div><h2 id="drTitle" style="margin:0">Range</h2><div id="drMeta" class="small muted"></div></div></div><div class="card pad" style="margin-top:13px"><b>Facilities</b><p id="drDetail" class="small muted" style="margin-top:5px"></p><div class="row between" style="margin-top:12px"><span>From</span><b id="drPrice"></b></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="closeSheet();openSheet('rangeBook')">Book practice</button></div>`;
+if(type==='discoverShop') data.discoverShop=`<div class="handle"></div><div class="row"><div class="avatar" style="background:#555">G</div><div><h2 id="dshopTitle" style="margin:0">Shop</h2><div id="dshopMeta" class="small muted"></div></div></div><div class="card pad" style="margin-top:13px"><b>What you can buy</b><p id="dshopDetail" class="small muted" style="margin-top:5px;line-height:1.5"></p></div><div class="grid2" style="margin-top:10px"><button class="btn outline" onclick="show('shop');closeSheet()">Browse products</button><button class="btn outline" onclick="openSheet('fitting')">Club fitting</button></div><button class="btn primary full" style="margin-top:10px" onclick="toast('Shop directions opened')">Get directions</button>`;
+if(type==='location') data.location=`<div class="handle"></div><h2>Choose location</h2><div class="field"><label>Search area</label><input value="Delhi"></div><div class="list card pad"><div class="listrow" onclick="closeSheet();toast('Location set to Shiamgir, Delhi')"><span>📍</span><div><b>Shiamgir, Delhi</b><div class="small muted">Current area</div></div></div><div class="listrow" onclick="closeSheet();toast('Location set to Gurgaon')"><span>📍</span><div><b>Gurgaon</b><div class="small muted">Delhi NCR</div></div></div><div class="listrow" onclick="closeSheet();toast('Location set to Noida')"><span>📍</span><div><b>Noida</b><div class="small muted">Delhi NCR</div></div></div></div>`;
+if(type==='map') data.map=`<div class="handle"></div><h2>Map view</h2><div class="card" style="height:300px;background:linear-gradient(135deg,#dce8d5,#f1eadb);position:relative;border:1px solid var(--line)"><div style="position:absolute;left:18%;top:22%;font-size:28px">📍</div><div style="position:absolute;left:62%;top:48%;font-size:28px">📍</div><div style="position:absolute;left:40%;top:70%;font-size:28px">📍</div><div style="position:absolute;bottom:12px;left:12px;right:12px;background:#fff;border-radius:12px;padding:10px;font-size:11px"><b>Delhi Golf Club</b><br><span class="muted">2.1 km · 4.7 ★ · ₹2,500</span></div></div><button class="btn primary full" style="margin-top:12px" onclick="closeSheet();openDiscover('dgc')">View Delhi Golf Club</button>`;
+
+S.innerHTML=data[type]||data.course;SB.classList.add('open');
+}
+function segment(b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+function dateSelect(b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+function slot(b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+function openCourse(name){openSheet('course');S.querySelector('h2').textContent=name}
+
+const DISCOVER_DATA = [
+ {id:'dgc',type:'course',name:'Delhi Golf Club',meta:'18 holes · 2.1 km · 4.7 ★',price:'₹2,500',tag:'Member rate',tagClass:'pgreen',icon:'⛳',color:'var(--green)',detail:'Historic 18-hole course · caddies · carts · pro shop · clubhouse',action:"openDiscover('dgc')"},
+ {id:'qutub',type:'course',name:'Qutub Golf Course',meta:'9 holes · 5.4 km · 4.4 ★',price:'₹1,800',tag:'Public',tagClass:'pteal',icon:'Q',color:'var(--teal)',detail:'Public 9-hole course · practice facilities · lessons',action:"openDiscover('qutub')"},
+ {id:'noida',type:'course',name:'Noida Golf Course',meta:'18 holes · 11.8 km · 4.6 ★',price:'₹3,200',tag:'Popular',tagClass:'pblue',icon:'N',color:'#52754e',detail:'18-hole course · driving range · academy · restaurant',action:"openDiscover('noida')"},
+ {id:'jaypee',type:'course',name:'Jaypee Greens',meta:'18 holes · 24 km · 4.8 ★',price:'₹6,500',tag:'Premium',tagClass:'ppurple',icon:'J',color:'var(--purple)',detail:'Championship course · resort · premium practice facilities',action:"openDiscover('jaypee')"},
+ {id:'ksr',type:'range',name:'Karnail Singh Range',meta:'2.8 km · 4.6 ★ · 42 / 60 bays',price:'₹350',tag:'Open now',tagClass:'pgreen',icon:'🏌️',color:'var(--teal)',detail:'Driving range · bucket balls · monthly packages',action:"openDiscover('ksr')"},
+ {id:'qpc',type:'range',name:'Qutub Practice Centre',meta:'5.7 km · 4.4 ★ · 12 launch bays',price:'₹900',tag:'Launch monitor',tagClass:'pblue',icon:'R',color:'var(--purple)',detail:'TrackMan bays · 60/90 min · coach sessions',action:"openDiscover('qpc')"},
+ {id:'arjun',type:'coach',name:'Arjun Mehta',meta:'PGA · 4.9 ★ · 128 reviews',price:'₹2,000/hr',tag:'Short game',tagClass:'pblue',icon:'AM',color:'var(--green)',detail:'Short game · swing · course play',action:"openDiscover('arjun')"},
+ {id:'rohit',type:'coach',name:'Rohit Kapoor',meta:'PGA · 4.8 ★ · 94 reviews',price:'₹1,500/hr',tag:'Beginners',tagClass:'pblue',icon:'RK',color:'var(--purple)',detail:'Beginner development · course play · swing',action:"openDiscover('rohit')"},
+ {id:'meera',type:'coach',name:'Meera Sethi',meta:'PGA · 4.8 ★ · 77 reviews',price:'₹1,800/hr',tag:'Putting',tagClass:'pteal',icon:'MS',color:'var(--teal)',detail:'Putting · short game · women’s golf',action:"openDiscover('meera')"},
+ {id:'dao',type:'tournament',name:'Delhi Amateur Open',meta:'31 Aug · DGC · 96 players',price:'₹4,500',tag:'Register',tagClass:'pblue',icon:'🏆',color:'var(--blue)',detail:'Stroke play · handicap required · draw on 29 Aug',action:"openDiscover('dao')"},
+ {id:'corp',type:'tournament',name:'Corporate Invitational',meta:'14 Sep · Classic Golf Resort',price:'₹7,500',tag:'4 spots',tagClass:'pamber',icon:'🏆',color:'var(--amber)',detail:'Team format · client hosting · 4 spots remaining',action:"openDiscover('corp')"},
+ {id:'gh',type:'shop',name:'Golf House Delhi',meta:'2.9 km · 4.5 ★ · Equipment',price:'Shop',tag:'Open',tagClass:'pgreen',icon:'G',color:'#555',detail:'Clubs · balls · shoes · fitting · repairs',action:"openDiscover('gh')"},
+ {id:'dgcshop',type:'shop',name:'DGC Pro Shop',meta:'2.1 km · 4.7 ★ · Member pricing',price:'Shop',tag:'Member',tagClass:'pgreen',icon:'P',color:var(--green),detail:'Member equipment · apparel · accessories · fitting',action:"openDiscover('dgcshop')"}
+];
+
+let discoverTypeFilter='all', discoverSortMode='distance';
+
+function renderDiscover(){
+  const q=(document.getElementById('discoverSearch')?.value||'').toLowerCase().trim();
+  let arr=DISCOVER_DATA.filter(x=>
+    (discoverTypeFilter==='all'||x.type===discoverTypeFilter) &&
+    (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q))
+  );
+  if(discoverSortMode==='price') arr.sort((a,b)=>parseInt((a.price||'').replace(/\D/g,'' )||'999999')-parseInt((b.price||'').replace(/\D/g,'' )||'999999'));
+  if(discoverSortMode==='rating') arr.sort((a,b)=>parseFloat((b.meta.match(/(\d\.\d)/)||['0','0'])[1])-parseFloat((a.meta.match(/(\d\.\d)/)||['0','0'])[1]));
+  const box=document.getElementById('discoverResults');
+  if(!box)return;
+  box.innerHTML=arr.map(x=>`
+    <div class="listrow discover-result" data-name="${x.name.toLowerCase()}" onclick="${x.action}">
+      <div class="avatar" style="background:${x.color}">${x.icon}</div>
+      <div style="flex:1;min-width:0">
+        <b>${x.name}</b>
+        <div class="small muted">${x.meta}</div>
+        <div class="small muted" style="margin-top:3px">${x.detail}</div>
+        <div style="margin-top:6px"><span class="pill ${x.tagClass}">${x.tag}</span></div>
+      </div>
+      <div style="text-align:right;flex:none"><b>${x.price}</b><div class="small muted">→</div></div>
+    </div>`).join('') || '<div class="card empty">No results match your filters.</div>';
+  document.getElementById('resultCount').textContent=arr.length+' result'+(arr.length===1?'':'s');
+  document.getElementById('discoverSummary').textContent=(q?'Search: '+q:'Delhi NCR')+' · '+arr.length+' results';
+}
+
+function discoverType(btn){
+  document.querySelectorAll('#discoverTypes .chip').forEach(x=>x.classList.remove('sel'));
+  btn.classList.add('sel');
+  discoverTypeFilter=btn.dataset.type;
+  renderDiscover();
+}
+function filterDiscover(){renderDiscover()}
+function sortDiscover(){
+  discoverSortMode=discoverSortMode==='distance'?'rating':discoverSortMode==='rating'?'price':'distance';
+  const label=discoverSortMode==='distance'?'Nearest first':discoverSortMode==='rating'?'Top rated first':'Lowest price first';
+  toast(label);
+  renderDiscover();
+}
+function openDiscover(id){
+  const x=DISCOVER_DATA.find(d=>d.id===id); if(!x)return;
+  if(x.type==='course'){
+    openSheet('discoverCourse');
+    S.querySelector('#dsTitle').textContent=x.name;
+    S.querySelector('#dsMeta').textContent=x.meta;
+    S.querySelector('#dsDetail').textContent=x.detail;
+    S.querySelector('#dsPrice').textContent=x.price;
+  } else if(x.type==='coach'){
+    openSheet('discoverCoach');
+    S.querySelector('#dcTitle').textContent=x.name;
+    S.querySelector('#dcMeta').textContent=x.meta;
+    S.querySelector('#dcDetail').textContent=x.detail;
+    S.querySelector('#dcPrice').textContent=x.price;
+  } else if(x.type==='range'){
+    openSheet('discoverRange');
+    S.querySelector('#drTitle').textContent=x.name;
+    S.querySelector('#drMeta').textContent=x.meta;
+    S.querySelector('#drDetail').textContent=x.detail;
+    S.querySelector('#drPrice').textContent=x.price;
+  } else if(x.type==='tournament'){
+    openSheet('tournament');
+  } else if(x.type==='shop'){
+    openSheet('discoverShop');
+    S.querySelector('#dshopTitle').textContent=x.name;
+    S.querySelector('#dshopMeta').textContent=x.meta;
+    S.querySelector('#dshopDetail').textContent=x.detail;
+  }
+}
+renderDiscover();
+</script>
+</body>
+</html>
