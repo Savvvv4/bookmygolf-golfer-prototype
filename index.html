@@ -115,7 +115,6 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 .mygolf-seg small{font-size:8.5px;color:var(--ink3)}
 .mygolf-seg.active{background:var(--green);border-color:var(--green);color:#fff}
 .mygolf-seg.active small{color:rgba(255,255,255,.72)}
-.mygolf-hero{box-shadow:0 8px 24px rgba(15,105,70,.10)}
 .game-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;text-align:center}
 .game-stats>div{padding:3px 2px}
 .game-stats b{display:block;font-size:19px;letter-spacing:-.5px}
@@ -275,15 +274,12 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
   </div>
 </div>
 
-<div class="section">
-  <div class="secrow"><div class="seclabel" id="myGolfPrimaryLabel">UP NEXT</div></div>
-  <div id="myGolfPrimary">
-    <div class="hero mygolf-hero">
-      <div class="eyebrow" style="color:rgba(255,255,255,.68)">NEXT ROUND</div>
-      <h2>Delhi Golf Club</h2>
-      <p>Tomorrow · 7:30 AM · 18 holes · 4 players</p>
-      <button class="btn" onclick="show('booking')">View round →</button>
-    </div>
+<div id="myGolfPrimary">
+  <div class="hero">
+    <div class="eyebrow" style="color:rgba(255,255,255,.68)">NEXT UP</div>
+    <h2 style="margin-top:5px">Delhi Golf Club</h2>
+    <p>Tomorrow · 7:30 AM · 18 holes · 4 players</p>
+    <button class="btn" onclick="show('booking')">View round →</button>
   </div>
 </div>
 
@@ -739,8 +735,7 @@ function switchGolfType(type,btn){
   const primary=document.getElementById('myGolfPrimary');
   const label=document.getElementById('myGolfPrimaryLabel');
   if(type==='tee'){
-    label.textContent='UP NEXT';
-    primary.innerHTML=`<div class="hero mygolf-hero"><div class="eyebrow" style="color:rgba(255,255,255,.68)">NEXT ROUND</div><h2>Delhi Golf Club</h2><p>Tomorrow · 7:30 AM · 18 holes · 4 players</p><button class="btn" onclick="show('booking')">View round →</button></div>`;
+    primary.innerHTML=`<div class="hero"><div class="eyebrow" style="color:rgba(255,255,255,.68)">NEXT UP</div><h2 style="margin-top:5px">Delhi Golf Club</h2><p>Tomorrow · 7:30 AM · 18 holes · 4 players</p><button class="btn" onclick="show('booking')">View round →</button></div>`;
   } else if(type==='lesson'){
     label.textContent='UP NEXT';
     primary.innerHTML=`<div class="card pad"><div class="row"><div class="activity-icon lesson">◎</div><div style="flex:1"><div class="eyebrow">MONDAY · 10:30 AM</div><h3 style="margin:4px 0">Short Game</h3><div class="small muted">Arjun Mehta · 60 min · KGA</div></div></div><button class="btn primary full" style="margin-top:13px" onclick="show('lessons')">View lesson</button></div>`;
