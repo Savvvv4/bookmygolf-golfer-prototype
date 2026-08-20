@@ -286,6 +286,102 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
   margin-top:0 !important;
 }
 </style>
+
+<style>
+/* Keep Discover search + filter inside the viewport */
+#discover .discover-search-row{
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  padding:0 1px !important;
+  overflow:hidden !important;
+}
+#discover .discover-search-row .discover-search{
+  min-width:0 !important;
+  width:auto !important;
+  max-width:calc(100% - 52px) !important;
+  box-sizing:border-box !important;
+  flex:1 1 auto !important;
+  overflow:hidden !important;
+}
+#discover .discover-search-row .discover-search input{
+  min-width:0 !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+#discover .discover-filter-inline{
+  flex:0 0 44px !important;
+  width:44px !important;
+  max-width:44px !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+}
+</style>
+
+<style>
+/* Align Discover search row exactly with the page content rails */
+#discover .discover-header{
+  width:100% !important;
+  box-sizing:border-box !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  overflow:hidden !important;
+}
+#discover .discover-search-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 44px !important;
+  gap:8px !important;
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+}
+#discover .discover-search-row .discover-search{
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+}
+#discover .discover-search-row .discover-filter-inline{
+  width:44px !important;
+  max-width:44px !important;
+  min-width:44px !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+}
+</style>
+
+<style>
+#discover .discover-header{
+  box-sizing:border-box !important;
+  padding:0 12px !important;
+  margin:0 !important;
+}
+#discover .discover-search-row{
+  width:100% !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+  padding:0 !important;
+  margin:0 !important;
+  gap:8px !important;
+}
+#discover .discover-search-row .discover-search{
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+}
+#discover .discover-search-row .discover-filter-inline{
+  width:44px !important;
+  min-width:44px !important;
+  max-width:44px !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+}
+</style>
 </head>
 <body>
 <div class="app">
