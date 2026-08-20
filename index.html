@@ -155,6 +155,102 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 .discover-focus .chip{white-space:nowrap}
 .discover-no-results{padding:28px 10px;text-align:center;color:var(--ink3);font-size:11px}
 </style>
+
+<style>
+#discover{
+  height:100% !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+#discover .discover-header{
+  flex:0 0 auto !important;
+  min-height:22px !important;
+  padding-top:2px !important;
+}
+#discover .section{flex:0 0 auto}
+#discover .discover-mode-content{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:auto !important;
+  overflow-y:auto !important;
+  padding-bottom:calc(18px + var(--nav-h, 70px)) !important;
+  scrollbar-width:none;
+}
+#discover .discover-mode-content::-webkit-scrollbar{display:none}
+#discover .discover-mode-content > .section{padding-bottom:20px}
+.discover-filter-summary{
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-top:9px;
+}
+.discover-filter-summary::-webkit-scrollbar{display:none}
+.discover-filter-summary .chip{white-space:nowrap}
+</style>
+
+<style>
+/* Discover fills the app viewport right up to the fixed bottom nav. */
+#discover{
+  box-sizing:border-box !important;
+  height:100% !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+#discover .discover-header{
+  flex:0 0 auto !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+#discover .discover-mode-section,
+#discover > .section:not(.discover-mode-content){
+  flex:0 0 auto !important;
+}
+#discover .discover-mode-content{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow-y:auto !important;
+  padding-bottom:20px !important;
+  margin-bottom:0 !important;
+  scrollbar-width:none !important;
+}
+#discover .discover-mode-content::-webkit-scrollbar{display:none}
+</style>
+
+<style>
+/* FINAL DISCOVER VIEWPORT FIX */
+#discover{
+  position:relative !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow:hidden !important;
+  display:block !important;
+  padding-bottom:0 !important;
+  box-sizing:border-box !important;
+}
+#discover .discover-header{
+  position:relative !important;
+  height:auto !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+#discover .discover-mode-content{
+  height:calc(100vh - 190px) !important;
+  max-height:none !important;
+  min-height:0 !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  padding-bottom:90px !important;
+  box-sizing:border-box !important;
+  scrollbar-width:none !important;
+}
+#discover .discover-mode-content::-webkit-scrollbar{display:none !important}
+</style>
 </head>
 <body>
 <div class="app">
@@ -233,12 +329,8 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 </section>
 
 <section id="discover" class="screen">
-<header>
-  <div class="hrow">
-    <div>
-      <div class="eyebrow">Discover</div>
-      <div class="title">Find your next round</div>
-    </div>
+<header class="discover-header">
+  <div class="hrow" style="justify-content:flex-end">
     <button class="icon" id="discoverFilterBtn" onclick="openDiscoverFilters()" aria-label="Filters">☷</button>
   </div>
 </header>
@@ -611,12 +703,12 @@ function setDiscoverMode(mode,btn){
 }
 function filterDiscoverModes(){
   const active=document.querySelector('.discover-mode.active');
-  renderDiscoverMode(active?.dataset.mode||'courses');
+  renderDiscoverModeFiltered();
 }
 function renderDiscoverMode(mode){
   const box=document.getElementById('discoverModeContent');
   if(!box)return;
-  const items=discoverMatches(mode);
+  const items=applyDiscoverFilters();
   const label=mode==='courses'?'Courses near you':mode==='coaches'?'Coaches near you':'Practice near you';
 
   if(mode==='courses'){
@@ -660,6 +752,108 @@ function renderDiscoverMode(mode){
     </div>`;
   }
 }
+
+const discoverFilterState = {
+  date: 'Any day',
+  distance: 'Any',
+  price: 'Any',
+  holes: 'All'
+};
+
+function applyDiscoverFilters(){
+  const q=getDiscoverQuery();
+  const mode=document.querySelector('.discover-mode.active')?.dataset.mode||'courses';
+  let items=DISCOVER_DATA.filter(x=>{
+    if(mode==='courses' && x.type!=='course') return false;
+    if(mode==='coaches' && x.type!=='coach') return false;
+    if(mode==='practice' && x.type!=='range') return false;
+
+    const hay=(x.name+' '+x.meta+' '+x.detail+' '+x.tag).toLowerCase();
+    if(q && !hay.includes(q)) return false;
+
+    const distanceMatch=x.meta.match(/(\d+(?:\.\d+)?)\s*km/);
+    const km=distanceMatch ? parseFloat(distanceMatch[1]) : null;
+    if(discoverFilterState.distance==='5 km' && km!==null && km>5) return false;
+    if(discoverFilterState.distance==='10 km' && km!==null && km>10) return false;
+    if(discoverFilterState.distance==='25 km' && km!==null && km>25) return false;
+
+    if(mode==='courses' && discoverFilterState.holes!=='All'){
+      const holesMatch=x.meta.match(/(\d+)\s*holes?/i);
+      if(holesMatch && holesMatch[1]!==discoverFilterState.holes.replace(' holes','')) return false;
+    }
+
+    if(discoverFilterState.price!=='Any'){
+      const priceMatch=(x.price||'').match(/₹([\d,]+)/);
+      if(priceMatch){
+        const price=parseInt(priceMatch[1].replace(/,/g,''),10);
+        if(discoverFilterState.price==='Under ₹1,500' && price>=1500) return false;
+        if(discoverFilterState.price==='₹1,500–₹3,000' && (price<1500 || price>3000)) return false;
+        if(discoverFilterState.price==='₹3,000+' && price<3000) return false;
+      }
+    }
+    return true;
+  });
+  return items;
+}
+
+function renderDiscoverModeFiltered(){
+  const active=document.querySelector('.discover-mode.active');
+  renderDiscoverMode(active?.dataset.mode||'courses');
+}
+
+function openDiscoverFilters(){
+  const sheet = `
+    <div class="handle"></div>
+    <h2>Filters</h2>
+    <div class="field">
+      <label>When</label>
+      <div class="chips filter-group" data-filter="date">
+        ${['Any day','Today','Tomorrow','Weekend'].map(v=>`<span class="chip ${discoverFilterState.date===v?'sel':''}" onclick="chooseDiscoverFilter('date','${v}',this)">${v}</span>`).join('')}
+      </div>
+    </div>
+    <div class="field">
+      <label>Distance</label>
+      <div class="chips filter-group" data-filter="distance">
+        ${['Any','5 km','10 km','25 km'].map(v=>`<span class="chip ${discoverFilterState.distance===v?'sel':''}" onclick="chooseDiscoverFilter('distance','${v}',this)">${v}</span>`).join('')}
+      </div>
+    </div>
+    <div class="field">
+      <label>Price</label>
+      <div class="chips filter-group" data-filter="price">
+        ${['Any','Under ₹1,500','₹1,500–₹3,000','₹3,000+'].map(v=>`<span class="chip ${discoverFilterState.price===v?'sel':''}" onclick="chooseDiscoverFilter('price','${v}',this)">${v}</span>`).join('')}
+      </div>
+    </div>
+    ${document.querySelector('.discover-mode.active')?.dataset.mode==='courses' ? `
+    <div class="field">
+      <label>Course</label>
+      <div class="chips filter-group" data-filter="holes">
+        ${['All','9 holes','18 holes'].map(v=>`<span class="chip ${discoverFilterState.holes===v?'sel':''}" onclick="chooseDiscoverFilter('holes','${v}',this)">${v}</span>`).join('')}
+      </div>
+    </div>` : ''}
+    <div class="actions">
+      <button class="btn secondary" onclick="resetDiscoverFilters()">Reset</button>
+      <button class="btn primary" onclick="closeSheet();renderDiscoverModeFiltered();toast('Filters applied')">Apply filters</button>
+    </div>`;
+  S.innerHTML=sheet;
+  SB.classList.add('open');
+}
+
+function chooseDiscoverFilter(key,value,el){
+  discoverFilterState[key]=value;
+  el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function resetDiscoverFilters(){
+  discoverFilterState.date='Any day';
+  discoverFilterState.distance='Any';
+  discoverFilterState.price='Any';
+  discoverFilterState.holes='All';
+  closeSheet();
+  renderDiscoverModeFiltered();
+  toast('Filters reset');
+}
+
 function openDiscoverFilters(){
   openSheet('filters');
 }
