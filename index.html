@@ -84,6 +84,28 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 .notification-btn{position:relative !important;overflow:visible !important}
 .notification-badge{position:absolute !important;top:-4px !important;right:-5px !important;min-width:16px !important;height:16px !important;padding:0 4px !important;border-radius:999px !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:9px !important;line-height:16px !important;z-index:5 !important;border:2px solid var(--bg) !important}
 </style>
+
+<style>
+.discover-search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:0 13px;height:46px;box-shadow:0 2px 8px rgba(20,30,20,.03)}
+.discover-search span{font-size:19px;color:var(--ink3)}
+.discover-search input{border:0;outline:0;flex:1;background:transparent;font:inherit;font-size:12px;color:var(--ink)}
+.discover-search input::placeholder{color:#9A9A94}
+.discover-courses{display:grid;gap:10px}
+.discover-course{display:flex;align-items:center;gap:12px;padding:11px;background:#fff;border:1px solid var(--line);border-radius:14px;cursor:pointer}
+.discover-course-cover{width:72px;height:72px;border-radius:11px;display:grid;place-items:center;flex:none;font-size:27px}
+.discover-course-body{min-width:0;flex:1}
+.discover-course-body h3{font-size:13px;margin:0 0 4px}
+.discover-course-meta{font-size:10px;color:var(--ink3);line-height:1.45}
+.discover-course-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.discover-course-foot .small{font-size:9.5px}
+.discover-horizontal{display:flex;gap:9px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+.discover-horizontal::-webkit-scrollbar{display:none}
+.discover-horizontal .mini-card{min-width:175px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;cursor:pointer}
+.discover-horizontal .mini-avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;margin-bottom:9px}
+.discover-horizontal h3{font-size:12px;margin:0 0 4px}
+.discover-horizontal .meta{font-size:9.5px;color:var(--ink3);line-height:1.4}
+.discover-horizontal .price{font-size:10px;font-weight:800;margin-top:8px}
+</style>
 </head>
 <body>
 <div class="app">
@@ -164,67 +186,37 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 <section id="discover" class="screen">
 <header>
   <div class="hrow">
-    <div><div class="eyebrow">Discover</div><div class="title">Golf near you</div><div class="subtitle" id="discoverSummary">Delhi NCR · 18 results</div></div>
-    <button class="icon" onclick="openSheet('filters')">☷</button>
+    <div>
+      <div class="eyebrow">Discover</div>
+      <div class="title">Find your next round</div>
+    </div>
+    <button class="icon" onclick="openSheet('filters')" aria-label="Filters">☷</button>
   </div>
 </header>
 
-<div class="section">
-  <div class="chips" id="discoverTypes">
-    <button class="chip sel" data-type="all" onclick="discoverType(this)">All <span class="tiny">(18)</span></button>
-    <button class="chip" data-type="course" onclick="discoverType(this)">Courses <span class="tiny">(6)</span></button>
-    <button class="chip" data-type="range" onclick="discoverType(this)">Ranges <span class="tiny">(4)</span></button>
-    <button class="chip" data-type="coach" onclick="discoverType(this)">Coaches <span class="tiny">(4)</span></button>
-    <button class="chip" data-type="tournament" onclick="discoverType(this)">Tournaments <span class="tiny">(2)</span></button>
-    <button class="chip" data-type="shop" onclick="discoverType(this)">Shops <span class="tiny">(2)</span></button>
+<div class="section" style="margin-top:8px">
+  <div class="discover-search">
+    <span>⌕</span>
+    <input id="discoverSearch" oninput="filterDiscover()" placeholder="Search courses, coaches, ranges…" autocomplete="off">
   </div>
-</div>
-
-<div class="section">
-  <div class="card pad">
-    <div class="row">
-      <div style="font-size:24px">📍</div>
-      <div style="flex:1">
-        <b id="discoverLocation">Shiamgir, Delhi</b>
-        <div class="small muted">Showing nearby golf experiences</div>
-      </div>
-      <button class="btn outline" onclick="openSheet('location')">Change</button>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="row" style="gap:8px">
-    <div style="flex:1">
-      <input id="discoverSearch" oninput="filterDiscover()" placeholder="Search courses, coaches, events…" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;outline:0;background:#fff">
-    </div>
-    <button class="icon" onclick="sortDiscover()">↕</button>
-  </div>
-</div>
-
-<div class="section">
-  <div class="notice green" id="discoverNotice">4 tee-time windows open this evening · 2 courses have member pricing.</div>
 </div>
 
 <div class="section">
   <div class="secrow">
-    <div class="seclabel">Results</div>
-    <span class="small muted" id="resultCount">18 results</span>
+    <div class="seclabel">Courses near you</div>
+    <span class="small muted" id="resultCount">4 courses</span>
   </div>
-  <div id="discoverResults" class="list"></div>
+  <div id="discoverCourseResults" class="discover-courses"></div>
 </div>
 
-<div class="section" id="discoverMapWrap">
-  <div class="secrow"><div class="seclabel">Map preview</div><span class="link" onclick="openSheet('map')">Open map</span></div>
-  <div class="card" style="height:180px;overflow:hidden;background:
-    radial-gradient(circle at 30% 35%,#b6d4b0 0 3%,transparent 3.5%),
-    radial-gradient(circle at 67% 58%,#9bc594 0 3%,transparent 3.5%),
-    linear-gradient(135deg,#dce8d5,#f1eadb);position:relative">
-    <div style="position:absolute;left:20%;top:25%;font-size:20px">📍</div>
-    <div style="position:absolute;left:62%;top:51%;font-size:20px">📍</div>
-    <div style="position:absolute;left:42%;top:70%;font-size:20px">📍</div>
-    <div style="position:absolute;right:12px;bottom:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800">2.1 km · 4.7 ★</div>
-  </div>
+<div class="section">
+  <div class="secrow"><div class="seclabel">Coaches</div><span class="link" onclick="scrollDiscoverTo('discoverCoachResults')">See all</span></div>
+  <div id="discoverCoachResults" class="discover-horizontal"></div>
+</div>
+
+<div class="section" style="padding-bottom:18px">
+  <div class="secrow"><div class="seclabel">Ranges</div><span class="link" onclick="scrollDiscoverTo('discoverRangeResults')">See all</span></div>
+  <div id="discoverRangeResults" class="discover-horizontal"></div>
 </div>
 </section>
 
@@ -467,6 +459,9 @@ if(type==='discoverShop') data.discoverShop=`<div class="handle"></div><div clas
 if(type==='location') data.location=`<div class="handle"></div><h2>Choose location</h2><div class="field"><label>Search area</label><input value="Delhi"></div><div class="list card pad"><div class="listrow" onclick="closeSheet();toast('Location set to Shiamgir, Delhi')"><span>📍</span><div><b>Shiamgir, Delhi</b><div class="small muted">Current area</div></div></div><div class="listrow" onclick="closeSheet();toast('Location set to Gurgaon')"><span>📍</span><div><b>Gurgaon</b><div class="small muted">Delhi NCR</div></div></div><div class="listrow" onclick="closeSheet();toast('Location set to Noida')"><span>📍</span><div><b>Noida</b><div class="small muted">Delhi NCR</div></div></div></div>`;
 if(type==='map') data.map=`<div class="handle"></div><h2>Map view</h2><div class="card" style="height:300px;background:linear-gradient(135deg,#dce8d5,#f1eadb);position:relative;border:1px solid var(--line)"><div style="position:absolute;left:18%;top:22%;font-size:28px">📍</div><div style="position:absolute;left:62%;top:48%;font-size:28px">📍</div><div style="position:absolute;left:40%;top:70%;font-size:28px">📍</div><div style="position:absolute;bottom:12px;left:12px;right:12px;background:#fff;border-radius:12px;padding:10px;font-size:11px"><b>Delhi Golf Club</b><br><span class="muted">2.1 km · 4.7 ★ · ₹2,500</span></div></div><button class="btn primary full" style="margin-top:12px" onclick="closeSheet();openDiscover('dgc')">View Delhi Golf Club</button>`;
 
+
+if(type==='filters') data.filters=`<div class="handle"></div><h2>Filters</h2><div class="field"><label>Date</label><div class="chips"><span class="chip sel">Any day</span><span class="chip">Today</span><span class="chip">Tomorrow</span><span class="chip">Weekend</span></div></div><div class="field"><label>Distance</label><div class="chips"><span class="chip sel">Any</span><span class="chip">5 km</span><span class="chip">10 km</span><span class="chip">25 km</span></div></div><div class="field"><label>Golf</label><div class="chips"><span class="chip sel">All</span><span class="chip">9 holes</span><span class="chip">18 holes</span><span class="chip">Practice</span></div></div><div class="field"><label>Price</label><div class="chips"><span class="chip sel">Any</span><span class="chip">Under ₹1,500</span><span class="chip">₹1,500–₹3,000</span><span class="chip">₹3,000+</span></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Reset</button><button class="btn primary" onclick="closeSheet();toast('Filters applied')">Apply filters</button></div>`;
+
 S.innerHTML=data[type]||data.course;SB.classList.add('open');
 }
 function segment(b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
@@ -494,41 +489,57 @@ let discoverTypeFilter='all', discoverSortMode='distance';
 
 function renderDiscover(){
   const q=(document.getElementById('discoverSearch')?.value||'').toLowerCase().trim();
-  let arr=DISCOVER_DATA.filter(x=>
-    (discoverTypeFilter==='all'||x.type===discoverTypeFilter) &&
-    (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q))
-  );
-  if(discoverSortMode==='price') arr.sort((a,b)=>parseInt((a.price||'').replace(/\D/g,'' )||'999999')-parseInt((b.price||'').replace(/\D/g,'' )||'999999'));
-  if(discoverSortMode==='rating') arr.sort((a,b)=>parseFloat((b.meta.match(/(\d\.\d)/)||['0','0'])[1])-parseFloat((a.meta.match(/(\d\.\d)/)||['0','0'])[1]));
-  const box=document.getElementById('discoverResults');
-  if(!box)return;
-  box.innerHTML=arr.map(x=>`
-    <div class="listrow discover-result" data-name="${x.name.toLowerCase()}" onclick="${x.action}">
-      <div class="avatar" style="background:${x.color}">${x.icon}</div>
-      <div style="flex:1;min-width:0">
-        <b>${x.name}</b>
-        <div class="small muted">${x.meta}</div>
-        <div class="small muted" style="margin-top:3px">${x.detail}</div>
-        <div style="margin-top:6px"><span class="pill ${x.tagClass}">${x.tag}</span></div>
-      </div>
-      <div style="text-align:right;flex:none"><b>${x.price}</b><div class="small muted">→</div></div>
-    </div>`).join('') || '<div class="card empty">No results match your filters.</div>';
-  document.getElementById('resultCount').textContent=arr.length+' result'+(arr.length===1?'':'s');
-  document.getElementById('discoverSummary').textContent=(q?'Search: '+q:'Delhi NCR')+' · '+arr.length+' results';
-}
+  const courses=DISCOVER_DATA.filter(x=>x.type==='course' && (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q)));
+  const coaches=DISCOVER_DATA.filter(x=>x.type==='coach' && (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q)));
+  const ranges=DISCOVER_DATA.filter(x=>x.type==='range' && (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q)));
 
-function discoverType(btn){
-  document.querySelectorAll('#discoverTypes .chip').forEach(x=>x.classList.remove('sel'));
-  btn.classList.add('sel');
-  discoverTypeFilter=btn.dataset.type;
-  renderDiscover();
+  const courseBox=document.getElementById('discoverCourseResults');
+  const coachBox=document.getElementById('discoverCoachResults');
+  const rangeBox=document.getElementById('discoverRangeResults');
+  if(!courseBox)return;
+
+  document.getElementById('resultCount').textContent=courses.length+' course'+(courses.length===1?'':'s');
+
+  courseBox.innerHTML=courses.map(x=>{
+    const distance=(x.meta.match(/\d+(?:\.\d+)? km/)||[''])[0];
+    const rating=(x.meta.match(/[\d.]+ ★/)||[''])[0];
+    const holes=(x.meta.match(/\d+ holes?/)||[''])[0];
+    return `<div class="discover-course" onclick="openDiscover('${x.id}')">
+      <div class="discover-course-cover" style="background:${x.color}">${x.icon}</div>
+      <div class="discover-course-body">
+        <h3>${x.name}</h3>
+        <div class="discover-course-meta">${holes}${holes&&distance?' · ':''}${distance}${(holes||distance)&&rating?' · ':''}${rating}</div>
+        <div class="discover-course-foot">
+          <span class="small muted">${x.tag}</span>
+          <b>${x.price}</b>
+        </div>
+      </div>
+      <span class="muted">›</span>
+    </div>`;
+  }).join('') || '<div class="card empty">No nearby courses match your search.</div>';
+
+  coachBox.innerHTML=coaches.slice(0,4).map(x=>`
+    <div class="mini-card" onclick="openDiscover('${x.id}')">
+      <div class="mini-avatar" style="background:${x.color}">${x.icon}</div>
+      <h3>${x.name}</h3>
+      <div class="meta">${x.meta}</div>
+      <div class="meta">${x.detail}</div>
+      <div class="price">${x.price}</div>
+    </div>`).join('') || '<div class="small muted">No coaches match your search.</div>';
+
+  rangeBox.innerHTML=ranges.slice(0,4).map(x=>`
+    <div class="mini-card" onclick="openDiscover('${x.id}')">
+      <div class="mini-avatar" style="border-radius:11px;background:${x.color}">${x.icon}</div>
+      <h3>${x.name}</h3>
+      <div class="meta">${x.meta}</div>
+      <div class="meta">${x.detail}</div>
+      <div class="price">${x.price}</div>
+    </div>`).join('') || '<div class="small muted">No ranges match your search.</div>';
 }
 function filterDiscover(){renderDiscover()}
-function sortDiscover(){
-  discoverSortMode=discoverSortMode==='distance'?'rating':discoverSortMode==='rating'?'price':'distance';
-  const label=discoverSortMode==='distance'?'Nearest first':discoverSortMode==='rating'?'Top rated first':'Lowest price first';
-  toast(label);
-  renderDiscover();
+function scrollDiscoverTo(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function openDiscover(id){
   const x=DISCOVER_DATA.find(d=>d.id===id); if(!x)return;
