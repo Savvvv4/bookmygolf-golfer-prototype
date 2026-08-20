@@ -856,9 +856,6 @@ function renderDiscoverMode(mode){
     box.innerHTML=`<div class="section">
       <div class="discover-mode-heading"><div class="seclabel">${label}</div><div class="count">${items.length} available</div></div>
       <div class="discover-intro">Find a coach by speciality, experience or style.</div>
-      <div class="discover-focus">
-        <span class="chip sel">All</span><span class="chip">Swing</span><span class="chip">Short game</span><span class="chip">Putting</span><span class="chip">Course play</span>
-      </div>
       <div class="discover-coach-list" style="margin-top:11px">${items.map(x=>`
         <div class="discover-profile-card" onclick="openDiscover('${x.id}')">
           <div class="avatar" style="background:${x.color}">${x.icon}</div>
@@ -869,9 +866,6 @@ function renderDiscoverMode(mode){
     box.innerHTML=`<div class="section">
       <div class="discover-mode-heading"><div class="seclabel">${label}</div><div class="count">${items.length} available</div></div>
       <div class="discover-intro">Find driving ranges and golf practice facilities nearby.</div>
-      <div class="discover-focus">
-        <span class="chip sel">All ranges</span><span class="chip">Driving range</span><span class="chip">Launch monitor</span><span class="chip">Club fitting</span>
-      </div>
       <div class="discover-practice-list" style="margin-top:11px">${items.map(x=>`
         <div class="discover-practice-card" onclick="openDiscover('${x.id}')">
           <div style="width:42px;height:42px;border-radius:11px;background:${x.color};display:grid;place-items:center;color:#fff;font-size:16px;margin-bottom:10px">${x.icon}</div>
