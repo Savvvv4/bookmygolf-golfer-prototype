@@ -93,8 +93,8 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 <header>
   <div class="hrow">
     <div>
-      <div class="eyebrow">Wednesday · 19 Aug</div>
-      <div class="title">Good evening, Arjun</div>
+      <div class="eyebrow" id="liveDate">Loading date…</div>
+      <div class="title" id="liveGreeting">Good evening, Arjun</div>
       <div class="subtitle">Your golf, at a glance.</div>
     </div>
     <button class="icon notification-btn" aria-label="Notifications" onclick="openSheet('notifications')">🔔<span class="badge notification-badge">3</span></button>
@@ -105,7 +105,7 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
   <div class="hero">
     <div class="eyebrow" style="color:rgba(255,255,255,.68)">NEXT UP</div>
     <h2 style="margin-top:5px">Delhi Golf Club</h2>
-    <p>Tomorrow · 7:30 AM · 18 holes · 4 players</p>
+    <p id="nextRoundTime">Tomorrow · 7:30 AM · 18 holes · 4 players</p>
     <button class="btn" onclick="show('booking')">View round →</button>
   </div>
 </div>
@@ -575,6 +575,76 @@ function setHomeBookingState(hasBooking){
   if(b)b.style.display=hasBooking?'none':'block';
 }
 </script>
+
+<script>
+(function(){
+  const TZ = 'Asia/Kolkata';
+  const $ = id => document.getElementById(id);
+
+  function nowIndia(){
+    return new Date(new Date().toLocaleString('en-US', {timeZone: TZ}));
+  }
+
+  function ordinal(n){
+    const s = ["th","st","nd","rd"], v = n % 100;
+    return n + (s[(v-20)%10] || s[v] || s[0]);
+  }
+
+  function updateLiveTime(){
+    const d = nowIndia();
+    const weekday = new Intl.DateTimeFormat('en-IN', {
+      weekday:'long', timeZone:TZ
+    }).format(new Date());
+    const month = new Intl.DateTimeFormat('en-IN', {
+      month:'short', timeZone:TZ
+    }).format(new Date());
+    const day = d.getDate();
+
+    let hour = d.getHours();
+    const minute = String(d.getMinutes()).padStart(2,'0');
+    const second = String(d.getSeconds()).padStart(2,'0');
+    const period = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+
+    let greeting = 'Good morning';
+    const h = d.getHours();
+    if(h >= 12 && h < 17) greeting = 'Good afternoon';
+    else if(h >= 17) greeting = 'Good evening';
+
+    if($('liveDate')) $('liveDate').textContent = `${weekday} · ${month} ${day}`;
+    if($('liveGreeting')) $('liveGreeting').textContent = `${greeting}, Arjun`;
+
+    // Small live-time indicator in the notification area/title when available.
+    const bell = document.querySelector('.notification-btn');
+    if(bell){
+      bell.setAttribute('title', `Current time · ${hour}:${minute}:${second} ${period} IST`);
+      bell.setAttribute('aria-label', `Notifications · ${hour}:${minute}:${second} ${period} IST`);
+    }
+  }
+
+  updateLiveTime();
+  setInterval(updateLiveTime, 1000);
+
+  // Expose the live clock to the rest of the prototype.
+  window.BookMyGolfClock = {
+    timezone: TZ,
+    now: nowIndia,
+    formatTime: function(date){
+      return new Intl.DateTimeFormat('en-IN',{
+        hour:'numeric', minute:'2-digit', second:'2-digit',
+        hour12:true, timeZone:TZ
+      }).format(date || new Date());
+    },
+    formatDate: function(date){
+      return new Intl.DateTimeFormat('en-IN',{
+        weekday:'short', day:'numeric', month:'short',
+        timeZone:TZ
+      }).format(date || new Date());
+    }
+  };
+})();
+</script>
+
 </body>
 </html>
 <script>updateDynamicNav('home');setHomeBookingState(true);</script>
