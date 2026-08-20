@@ -63,38 +63,101 @@ textarea{width:100%;min-height:82px;border:1px solid var(--line);border-radius:1
 .bottom-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 0 2px;margin-top:12px}
 </style>
 
+
+<style>
+#home .hero{padding:21px 19px 18px;box-shadow:0 8px 24px rgba(15,105,70,.10)}
+#home .hero h2{font-size:21px}
+#home .section{margin-top:19px}
+#home .quick button{padding:14px 6px;min-height:88px}
+#home .quick .qi{font-size:18px}
+#home .quick .ql{font-size:10.5px;line-height:1.2}
+#home .attn .card{min-width:245px;padding:15px;border:0}
+#home .attn h3{font-size:13.5px;margin-top:6px}
+#home .attn p{line-height:1.45}
+#home .grid2 .card{min-height:66px;cursor:pointer}
+#home .grid2 .card b{font-size:12.5px}
+#home .grid2 .card .small{margin-top:4px}
+</style>
 </head>
 <body>
 <div class="app">
 <main id="main">
 
 <section id="home" class="screen active">
-<header><div class="hrow"><div><div class="eyebrow">Wednesday · 19 Aug</div><div class="title">Good evening, Arjun</div><div class="subtitle">Your golf week, in one place.</div></div><button class="icon" onclick="openSheet('notifications')">🔔<span class="badge" style="top:3px;right:2px">3</span></button></div></header>
-<div class="hero"><h2>Tomorrow: Delhi Golf Club</h2><p>7:30 AM · 18 holes · 4 players · Caddy reserved</p><button class="btn" onclick="show('booking')">View booking →</button></div>
-<div class="section"><div class="secrow"><div class="seclabel">Quick actions</div></div><div class="quick">
-<button onclick="show('discover')"><div class="qi">🗺️</div><div class="ql">Find golf</div></button>
-<button onclick="show('booking')"><div class="qi">📅</div><div class="ql">Book tee time</div></button>
-<button onclick="show('lessons')"><div class="qi">🎓</div><div class="ql">Lessons</div></button>
-<button onclick="show('range')"><div class="qi">🏌️</div><div class="ql">Range</div></button>
-</div></div>
-<div class="section"><div class="secrow"><div class="seclabel">Needs your attention</div></div><div class="attn">
-<div class="card" style="background:var(--amberbg)" onclick="openSheet('reschedule')"><div class="tag" style="color:var(--amber)">Booking</div><h3>Rain forecast after 5 PM</h3><p>Tomorrow's tee time can be rescheduled before 7:30 PM today.</p></div>
-<div class="card" style="background:var(--bluebg)" onclick="show('lessons')"><div class="tag" style="color:var(--blue)">Coach</div><h3>New swing feedback</h3><p>Arjun added 3 frames and a voice note after your last lesson.</p></div>
-<div class="card" style="background:var(--greenbg)" onclick="show('memberships')"><div class="tag" style="color:var(--green2)">Membership</div><h3>Member rate applied</h3><p>Delhi Golf Club saved ₹700 on your next booking.</p></div>
-</div></div>
-<div class="section"><div class="secrow"><div class="seclabel">Upcoming</div><span class="link" onclick="show('schedule')">See all</span></div>
-<div class="card pad"><div class="schedule-item" onclick="show('booking')"><div class="time">7:30<br><span class="muted">AM</span></div><div class="bar"></div><div><h3>Delhi Golf Club</h3><p>18 holes · 4 players · Ramesh Kumar caddy</p><div style="margin-top:6px"><span class="pill pgreen">Confirmed</span></div></div></div>
-<div class="schedule-item" onclick="show('lessons')"><div class="time">10:30<br><span class="muted">AM</span></div><div class="bar" style="background:var(--blue)"></div><div><h3>Short Game · Arjun Mehta</h3><p>60 min · KGA · Lesson package</p><div style="margin-top:6px"><span class="pill pblue">Coach session</span></div></div></div></div></div>
-<div class="section"><div class="secrow"><div class="seclabel">Golf beyond booking</div></div><div class="grid2">
-<div class="card pad" onclick="show('news')"><b>📰 Golf news</b><div class="small muted">India, tour & coaching</div></div>
-<div class="card pad" onclick="show('record')"><b>📊 Your handicap</b><div class="small muted">14.2 · 37 rounds</div></div>
-<div class="card pad" onclick="show('corporate')"><b>🤝 Corporate golf</b><div class="small muted">Group & client events</div></div>
-<div class="card pad" onclick="show('shop')"><b>🛍️ Equipment</b><div class="small muted">Pro shops nationwide</div></div>
-</div></div>
-<div class="section"><div class="secrow"><div class="seclabel">Nearby courses</div><span class="link" onclick="show('discover')">Explore</span></div><div class="hscroll">
-<div class="card course" onclick="openCourse('Delhi Golf Club')"><div class="course-cover">⛳</div><div class="course-body"><h3>Delhi Golf Club</h3><div class="course-meta">18 holes · 2.1 km · 4.7 ★</div><div class="course-foot"><span class="pill pgreen">Member rate</span><b>₹2,500</b></div></div></div>
-<div class="card course" onclick="openCourse('Qutub Golf Course')"><div class="course-cover" style="background:linear-gradient(135deg,#254d3a,#779a5a)">🌳</div><div class="course-body"><h3>Qutub Golf Course</h3><div class="course-meta">9 holes · 5.4 km · 4.4 ★</div><div class="course-foot"><span class="pill pteal">Public</span><b>₹1,800</b></div></div></div>
-</div></div>
+<header>
+  <div class="hrow">
+    <div>
+      <div class="eyebrow">Wednesday · 19 Aug</div>
+      <div class="title">Good evening, Arjun</div>
+      <div class="subtitle">Your golf, at a glance.</div>
+    </div>
+    <button class="icon" aria-label="Notifications" onclick="openSheet('notifications')">🔔<span class="badge" style="top:3px;right:2px">3</span></button>
+  </div>
+</header>
+
+<div id="homeHero">
+  <div class="hero">
+    <div class="eyebrow" style="color:rgba(255,255,255,.68)">NEXT UP</div>
+    <h2 style="margin-top:5px">Delhi Golf Club</h2>
+    <p>Tomorrow · 7:30 AM · 18 holes · 4 players</p>
+    <button class="btn" onclick="show('booking')">View round →</button>
+  </div>
+</div>
+
+<div id="homeDiscoveryHero" style="display:none">
+  <div class="hero">
+    <div class="eyebrow" style="color:rgba(255,255,255,.68)">READY TO PLAY?</div>
+    <h2 style="margin-top:5px">Find your next round</h2>
+    <p>Explore courses and tee times nearby.</p>
+    <button class="btn" onclick="show('discover')">Explore golf →</button>
+  </div>
+  <div class="section" style="margin-top:10px">
+    <div class="secrow"><div class="seclabel">Nearby</div><span class="link" onclick="show('discover')">See all</span></div>
+    <div class="hscroll">
+      <div class="card course" onclick="openCourse('Delhi Golf Club')">
+        <div class="course-cover">⛳</div><div class="course-body"><h3>Delhi Golf Club</h3><div class="course-meta">18 holes · 2.1 km · 4.7 ★</div><div class="course-foot"><span class="pill pgreen">Member rate</span><b>₹2,500</b></div></div>
+      </div>
+      <div class="card course" onclick="openCourse('Qutub Golf Course')">
+        <div class="course-cover" style="background:linear-gradient(135deg,#254d3a,#779a5a)">🌳</div><div class="course-body"><h3>Qutub Golf Course</h3><div class="course-meta">9 holes · 5.4 km · 4.4 ★</div><div class="course-foot"><span class="pill pteal">Public</span><b>₹1,800</b></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="secrow"><div class="seclabel">Play</div></div>
+  <div class="quick" style="grid-template-columns:repeat(3,1fr)">
+    <button onclick="show('range')"><div class="qi">🏌️</div><div class="ql">Book a range</div></button>
+    <button onclick="show('booking')"><div class="qi">📅</div><div class="ql">Book a tee time</div></button>
+    <button onclick="openSheet('request')"><div class="qi">🎓</div><div class="ql">Book a lesson</div></button>
+  </div>
+</div>
+
+<div class="section">
+  <div class="secrow"><div class="seclabel">Updates</div></div>
+  <div class="attn">
+    <div class="card" style="background:var(--bluebg)" onclick="show('lessons')">
+      <div class="tag" style="color:var(--blue)">FROM YOUR COACH</div>
+      <h3>New swing feedback</h3>
+      <p>Arjun added 3 frames and a voice note after your last lesson.</p>
+    </div>
+    <div class="card" style="background:var(--amberbg)" onclick="openSheet('reschedule')">
+      <div class="tag" style="color:var(--amber)">BOOKING UPDATE</div>
+      <h3>Your round needs review</h3>
+      <p>There is an update to your upcoming tee time.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="padding-bottom:8px">
+  <div class="secrow"><div class="seclabel">Explore golf</div></div>
+  <div class="grid2">
+    <div class="card pad" onclick="show('news')"><b>Golf news</b><div class="small muted">India, tour & coaching</div></div>
+    <div class="card pad" onclick="show('record')"><b>Your game</b><div class="small muted">Handicap · 14.2 · 37 rounds</div></div>
+    <div class="card pad" onclick="show('corporate')"><b>Corporate golf</b><div class="small muted">Groups & client events</div></div>
+    <div class="card pad" onclick="show('shop')"><b>Equipment</b><div class="small muted">Clubs, gear & fitting</div></div>
+  </div>
+</div>
 </section>
 
 <section id="discover" class="screen">
@@ -338,12 +401,12 @@ textarea{width:100%;min-height:82px;border:1px solid var(--line);border-radius:1
 
 </main>
 
-<nav class="nav">
-<button data-tab="home" class="active" onclick="show('home')"><span class="ni">⌂</span>Home</button>
-<button data-tab="discover" onclick="show('discover')"><span class="ni">⌕</span>Discover</button>
-<button data-tab="schedule" onclick="show('schedule')"><span class="ni">◫</span>My golf</button>
-<button data-tab="lessons" onclick="show('lessons')"><span class="ni">♧</span>Coach</button>
-<button data-tab="profile" onclick="show('profile')"><span class="ni">◯</span>Profile</button>
+<nav class="nav" id="dynamicNav">
+<button data-nav="home" onclick="show('home')"><span class="ni">⌂</span>Home</button>
+<button data-nav="discover" onclick="show('discover')"><span class="ni">⌕</span>Discover</button>
+<button data-nav="schedule" onclick="show('schedule')"><span class="ni">◷</span>My Golf</button>
+<button data-nav="lessons" onclick="show('lessons')"><span class="ni">◎</span>Coach</button>
+<button data-nav="profile" onclick="show('profile')"><span class="ni">○</span>Profile</button>
 </nav>
 
 <div id="toast" class="toast"></div>
@@ -360,7 +423,8 @@ function show(id){
  document.getElementById(id).classList.add('active');
  document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
  document.getElementById('main').scrollTop=0;
-}
+
+  updateDynamicNav(id);}
 function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
 function closeSheet(){SB.classList.remove('open')}
 function openSheet(type){
@@ -495,6 +559,21 @@ function openDiscover(id){
   }
 }
 renderDiscover();
+
+function updateDynamicNav(id){
+  const nav=document.getElementById('dynamicNav'); if(!nav)return;
+  const root=(id==='home'||id==='discover'||id==='schedule'||id==='lessons'||id==='profile')?id:
+    (id==='range'||id==='tournaments'||id==='shop'||id==='news'?'discover':
+    (id==='record'||id==='memberships'||id==='wallet'||id==='orders'?'schedule':
+    (id==='feedback'?'lessons':'home')));
+  nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.nav===root));
+}
+function setHomeBookingState(hasBooking){
+  const a=document.getElementById('homeHero'), b=document.getElementById('homeDiscoveryHero');
+  if(a)a.style.display=hasBooking?'block':'none';
+  if(b)b.style.display=hasBooking?'none':'block';
+}
 </script>
 </body>
 </html>
+<script>updateDynamicNav('home');setHomeBookingState(true);</script>
