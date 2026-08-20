@@ -382,6 +382,11 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
   box-sizing:border-box !important;
 }
 </style>
+<style>
+/* Navigation fix: Discover must not remain visible when another screen is active. */
+#discover.screen:not(.active){display:none !important;}
+#discover.screen.active{display:block !important;}
+</style>
 </head>
 <body>
 <div class="app">
@@ -726,12 +731,14 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 <script>
 const S=document.getElementById('sheetContent'), SB=document.getElementById('sheet');
 function show(id){
+ const target=document.getElementById(id);
+ if(!target)return;
  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+ target.classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.nav===id));
  document.getElementById('main').scrollTop=0;
-
-  updateDynamicNav(id);}
+ updateDynamicNav(id);
+}
 function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
 function closeSheet(){SB.classList.remove('open')}
 function openSheet(type){
