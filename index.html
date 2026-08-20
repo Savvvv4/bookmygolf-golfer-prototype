@@ -78,6 +78,12 @@ textarea{width:100%;min-height:82px;border:1px solid var(--line);border-radius:1
 #home .grid2 .card b{font-size:12.5px}
 #home .grid2 .card .small{margin-top:4px}
 </style>
+
+<style>
+header{position:relative !important;top:auto !important;z-index:1 !important;background:transparent !important}
+.notification-btn{position:relative !important;overflow:visible !important}
+.notification-badge{position:absolute !important;top:-4px !important;right:-5px !important;min-width:16px !important;height:16px !important;padding:0 4px !important;border-radius:999px !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:9px !important;line-height:16px !important;z-index:5 !important;border:2px solid var(--bg) !important}
+</style>
 </head>
 <body>
 <div class="app">
@@ -91,7 +97,7 @@ textarea{width:100%;min-height:82px;border:1px solid var(--line);border-radius:1
       <div class="title">Good evening, Arjun</div>
       <div class="subtitle">Your golf, at a glance.</div>
     </div>
-    <button class="icon" aria-label="Notifications" onclick="openSheet('notifications')">🔔<span class="badge" style="top:3px;right:2px">3</span></button>
+    <button class="icon notification-btn" aria-label="Notifications" onclick="openSheet('notifications')">🔔<span class="badge notification-badge">3</span></button>
   </div>
 </header>
 
@@ -140,11 +146,6 @@ textarea{width:100%;min-height:82px;border:1px solid var(--line);border-radius:1
       <div class="tag" style="color:var(--blue)">FROM YOUR COACH</div>
       <h3>New swing feedback</h3>
       <p>Arjun added 3 frames and a voice note after your last lesson.</p>
-    </div>
-    <div class="card" style="background:var(--amberbg)" onclick="openSheet('reschedule')">
-      <div class="tag" style="color:var(--amber)">BOOKING UPDATE</div>
-      <h3>Your round needs review</h3>
-      <p>There is an update to your upcoming tee time.</p>
     </div>
   </div>
 </div>
