@@ -126,43 +126,34 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 </style>
 
 <style>
-/* Discover: keep the page fixed; scroll only inside content groups */
-#discover{
-  overflow:hidden !important;
-}
-#discover .discover-courses{
-  max-height:174px;
-  overflow-y:auto;
-  padding-right:3px;
-  scrollbar-width:none;
-  overscroll-behavior:contain;
-}
-#discover .discover-courses::-webkit-scrollbar{display:none}
-#discover .discover-horizontal{
-  max-width:100%;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scrollbar-width:none;
-  overscroll-behavior:contain;
-  scroll-snap-type:x proximity;
-}
-#discover .discover-horizontal::-webkit-scrollbar{display:none}
-#discover .discover-horizontal .mini-card{
-  scroll-snap-align:start;
-}
-#discover .section{flex:none}
-</style>
-
-<style>
-#discover .discover-courses-wrap{position:relative}
-#discover .discover-courses-wrap:after{
-  content:"";
-  position:absolute;
-  left:0;right:3px;bottom:0;height:16px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0),var(--bg));
-  pointer-events:none;
-  opacity:.72;
-}
+#discover{overflow:hidden!important}
+#discover .discover-mode-section{margin-top:7px}
+.discover-modes{display:grid;grid-template-columns:repeat(3,1fr);background:#ECEDE8;border-radius:12px;padding:3px;gap:2px}
+.discover-mode{border:0;background:transparent;border-radius:9px;padding:9px 6px;font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer}
+.discover-mode.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(20,30,20,.07)}
+.discover-mode-content{height:calc(100% - 172px);overflow-y:auto;padding-bottom:12px;scrollbar-width:none}
+.discover-mode-content::-webkit-scrollbar{display:none}
+.discover-mode-content .section{margin-top:17px}
+.discover-mode-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.discover-mode-heading .seclabel{font-size:10px}
+.discover-mode-heading .count{font-size:9px;color:var(--ink3)}
+.discover-full-list{display:grid;gap:9px}
+.discover-course-large{display:flex;align-items:center;gap:12px;padding:11px;background:#fff;border:1px solid var(--line);border-radius:14px;cursor:pointer}
+.discover-course-large .cover{width:78px;height:78px;border-radius:11px;display:grid;place-items:center;flex:none;font-size:28px}
+.discover-course-large h3{font-size:13px;margin:0 0 5px}
+.discover-course-large .meta{font-size:9.5px;color:var(--ink3);line-height:1.45}
+.discover-course-large .foot{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:10px}
+.discover-coach-list,.discover-practice-list{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.discover-profile-card,.discover-practice-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer}
+.discover-profile-card .avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;margin-bottom:10px}
+.discover-profile-card h3,.discover-practice-card h3{font-size:12px;margin:0 0 4px}
+.discover-profile-card .meta,.discover-practice-card .meta{font-size:9px;color:var(--ink3);line-height:1.45}
+.discover-profile-card .price,.discover-practice-card .price{font-size:10px;font-weight:800;margin-top:8px}
+.discover-intro{font-size:10px;color:var(--ink3);line-height:1.45;margin:-3px 0 11px}
+.discover-focus{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.discover-focus::-webkit-scrollbar{display:none}
+.discover-focus .chip{white-space:nowrap}
+.discover-no-results{padding:28px 10px;text-align:center;color:var(--ink3);font-size:11px}
 </style>
 </head>
 <body>
@@ -248,34 +239,26 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
       <div class="eyebrow">Discover</div>
       <div class="title">Find your next round</div>
     </div>
-    <button class="icon" onclick="openSheet('filters')" aria-label="Filters">☷</button>
+    <button class="icon" id="discoverFilterBtn" onclick="openDiscoverFilters()" aria-label="Filters">☷</button>
   </div>
 </header>
 
 <div class="section" style="margin-top:8px">
   <div class="discover-search">
     <span>⌕</span>
-    <input id="discoverSearch" oninput="filterDiscover()" placeholder="Search courses, coaches, ranges…" autocomplete="off">
+    <input id="discoverSearch" oninput="filterDiscoverModes()" placeholder="Search golf, courses, coaches…" autocomplete="off">
   </div>
 </div>
 
-<div class="section">
-  <div class="secrow">
-    <div class="seclabel">Courses near you</div>
-    <span class="small muted" id="resultCount">4 courses</span>
+<div class="section discover-mode-section">
+  <div class="discover-modes" role="tablist">
+    <button class="discover-mode active" data-mode="courses" onclick="setDiscoverMode('courses',this)">Courses</button>
+    <button class="discover-mode" data-mode="coaches" onclick="setDiscoverMode('coaches',this)">Coaches</button>
+    <button class="discover-mode" data-mode="practice" onclick="setDiscoverMode('practice',this)">Practice</button>
   </div>
-  <div class="discover-courses-wrap"><div id="discoverCourseResults" class="discover-courses"></div></div>
 </div>
 
-<div class="section">
-  <div class="secrow"><div class="seclabel">Coaches</div><span class="link" onclick="scrollDiscoverTo('discoverCoachResults')">See all</span></div>
-  <div id="discoverCoachResults" class="discover-horizontal"></div>
-</div>
-
-<div class="section" style="padding-bottom:18px">
-  <div class="secrow"><div class="seclabel">Ranges</div><span class="link" onclick="scrollDiscoverTo('discoverRangeResults')">See all</span></div>
-  <div id="discoverRangeResults" class="discover-horizontal"></div>
-</div>
+<div id="discoverModeContent" class="discover-mode-content"></div>
 </section>
 
 <section id="booking" class="screen">
@@ -608,59 +591,80 @@ const DISCOVER_DATA = [
 
 let discoverTypeFilter='all', discoverSortMode='distance';
 
-function renderDiscover(){
-  const q=(document.getElementById('discoverSearch')?.value||'').toLowerCase().trim();
-  const courses=DISCOVER_DATA.filter(x=>x.type==='course' && (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q)));
-  const coaches=DISCOVER_DATA.filter(x=>x.type==='coach' && (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q)));
-  const ranges=DISCOVER_DATA.filter(x=>x.type==='range' && (!q || (x.name+' '+x.meta+' '+x.detail).toLowerCase().includes(q)));
-
-  const courseBox=document.getElementById('discoverCourseResults');
-  const coachBox=document.getElementById('discoverCoachResults');
-  const rangeBox=document.getElementById('discoverRangeResults');
-  if(!courseBox)return;
-
-  document.getElementById('resultCount').textContent=courses.length+' course'+(courses.length===1?'':'s');
-
-  courseBox.innerHTML=courses.map(x=>{
-    const distance=(x.meta.match(/\d+(?:\.\d+)? km/)||[''])[0];
-    const rating=(x.meta.match(/[\d.]+ ★/)||[''])[0];
-    const holes=(x.meta.match(/\d+ holes?/)||[''])[0];
-    return `<div class="discover-course" onclick="openDiscover('${x.id}')">
-      <div class="discover-course-cover" style="background:${x.color}">${x.icon}</div>
-      <div class="discover-course-body">
-        <h3>${x.name}</h3>
-        <div class="discover-course-meta">${holes}${holes&&distance?' · ':''}${distance}${(holes||distance)&&rating?' · ':''}${rating}</div>
-        <div class="discover-course-foot">
-          <span class="small muted">${x.tag}</span>
-          <b>${x.price}</b>
-        </div>
-      </div>
-      <span class="muted">›</span>
-    </div>`;
-  }).join('') || '<div class="card empty">No nearby courses match your search.</div>';
-
-  coachBox.innerHTML=coaches.slice(0,4).map(x=>`
-    <div class="mini-card" onclick="openDiscover('${x.id}')">
-      <div class="mini-avatar" style="background:${x.color}">${x.icon}</div>
-      <h3>${x.name}</h3>
-      <div class="meta">${x.meta}</div>
-      <div class="meta">${x.detail}</div>
-      <div class="price">${x.price}</div>
-    </div>`).join('') || '<div class="small muted">No coaches match your search.</div>';
-
-  rangeBox.innerHTML=ranges.slice(0,4).map(x=>`
-    <div class="mini-card" onclick="openDiscover('${x.id}')">
-      <div class="mini-avatar" style="border-radius:11px;background:${x.color}">${x.icon}</div>
-      <h3>${x.name}</h3>
-      <div class="meta">${x.meta}</div>
-      <div class="meta">${x.detail}</div>
-      <div class="price">${x.price}</div>
-    </div>`).join('') || '<div class="small muted">No ranges match your search.</div>';
+function getDiscoverQuery(){
+  return (document.getElementById('discoverSearch')?.value||'').toLowerCase().trim();
 }
-function filterDiscover(){renderDiscover()}
+function discoverMatches(type){
+  const q=getDiscoverQuery();
+  return DISCOVER_DATA.filter(x=>{
+    if(type==='courses' && x.type!=='course') return false;
+    if(type==='coaches' && x.type!=='coach') return false;
+    if(type==='practice' && x.type!=='range') return false;
+    return !q || (x.name+' '+x.meta+' '+x.detail+' '+x.tag).toLowerCase().includes(q);
+  });
+}
+function setDiscoverMode(mode,btn){
+  document.querySelectorAll('.discover-mode').forEach(x=>x.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else document.querySelector('.discover-mode[data-mode="'+mode+'"]')?.classList.add('active');
+  renderDiscoverMode(mode);
+}
+function filterDiscoverModes(){
+  const active=document.querySelector('.discover-mode.active');
+  renderDiscoverMode(active?.dataset.mode||'courses');
+}
+function renderDiscoverMode(mode){
+  const box=document.getElementById('discoverModeContent');
+  if(!box)return;
+  const items=discoverMatches(mode);
+  const label=mode==='courses'?'Courses near you':mode==='coaches'?'Coaches near you':'Practice near you';
+
+  if(mode==='courses'){
+    box.innerHTML=`<div class="section">
+      <div class="discover-mode-heading"><div class="seclabel">${label}</div><div class="count">${items.length} available</div></div>
+      <div class="discover-full-list">${items.map(x=>`
+        <div class="discover-course-large" onclick="openDiscover('${x.id}')">
+          <div class="cover" style="background:${x.color}">${x.icon}</div>
+          <div style="flex:1;min-width:0">
+            <h3>${x.name}</h3>
+            <div class="meta">${x.meta}</div>
+            <div class="foot"><span class="muted">${x.tag}</span><b>${x.price}</b></div>
+          </div><span class="muted">›</span>
+        </div>`).join('')||'<div class="discover-no-results">No courses match your search.</div>'}</div>
+    </div>`;
+  } else if(mode==='coaches'){
+    box.innerHTML=`<div class="section">
+      <div class="discover-mode-heading"><div class="seclabel">${label}</div><div class="count">${items.length} available</div></div>
+      <div class="discover-intro">Find a coach by speciality, experience or style.</div>
+      <div class="discover-focus">
+        <span class="chip sel">All</span><span class="chip">Swing</span><span class="chip">Short game</span><span class="chip">Putting</span><span class="chip">Course play</span>
+      </div>
+      <div class="discover-coach-list" style="margin-top:11px">${items.map(x=>`
+        <div class="discover-profile-card" onclick="openDiscover('${x.id}')">
+          <div class="avatar" style="background:${x.color}">${x.icon}</div>
+          <h3>${x.name}</h3><div class="meta">${x.meta}</div><div class="meta">${x.detail}</div><div class="price">${x.price}</div>
+        </div>`).join('')||'<div class="discover-no-results" style="grid-column:1/-1">No coaches match your search.</div>'}</div>
+    </div>`;
+  } else {
+    box.innerHTML=`<div class="section">
+      <div class="discover-mode-heading"><div class="seclabel">${label}</div><div class="count">${items.length} available</div></div>
+      <div class="discover-intro">Practice at a range, launch monitor or dedicated golf facility.</div>
+      <div class="discover-focus">
+        <span class="chip sel">All practice</span><span class="chip">Driving range</span><span class="chip">Launch monitor</span><span class="chip">Club fitting</span>
+      </div>
+      <div class="discover-practice-list" style="margin-top:11px">${items.map(x=>`
+        <div class="discover-practice-card" onclick="openDiscover('${x.id}')">
+          <div style="width:42px;height:42px;border-radius:11px;background:${x.color};display:grid;place-items:center;color:#fff;font-size:16px;margin-bottom:10px">${x.icon}</div>
+          <h3>${x.name}</h3><div class="meta">${x.meta}</div><div class="meta">${x.detail}</div><div class="price">${x.price}</div>
+        </div>`).join('')||'<div class="discover-no-results" style="grid-column:1/-1">No practice facilities match your search.</div>'}</div>
+    </div>`;
+  }
+}
+function openDiscoverFilters(){
+  openSheet('filters');
+}
 function scrollDiscoverTo(id){
-  const el=document.getElementById(id);
-  if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function openDiscover(id){
   const x=DISCOVER_DATA.find(d=>d.id===id); if(!x)return;
@@ -682,16 +686,9 @@ function openDiscover(id){
     S.querySelector('#drMeta').textContent=x.meta;
     S.querySelector('#drDetail').textContent=x.detail;
     S.querySelector('#drPrice').textContent=x.price;
-  } else if(x.type==='tournament'){
-    openSheet('tournament');
-  } else if(x.type==='shop'){
-    openSheet('discoverShop');
-    S.querySelector('#dshopTitle').textContent=x.name;
-    S.querySelector('#dshopMeta').textContent=x.meta;
-    S.querySelector('#dshopDetail').textContent=x.detail;
   }
 }
-renderDiscover();
+renderDiscoverMode('courses');
 
 function updateDynamicNav(id){
   const nav=document.getElementById('dynamicNav'); if(!nav)return;
