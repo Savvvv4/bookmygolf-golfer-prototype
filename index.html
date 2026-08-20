@@ -251,6 +251,41 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 }
 #discover .discover-mode-content::-webkit-scrollbar{display:none !important}
 </style>
+
+<style>
+#discover .discover-header{
+  padding:4px 0 0 !important;
+  margin:0 !important;
+}
+#discover .discover-search-row{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:100% !important;
+}
+#discover .discover-search-row .discover-search{
+  flex:1 !important;
+  min-width:0 !important;
+  height:44px !important;
+}
+#discover .discover-filter-inline{
+  width:44px !important;
+  height:44px !important;
+  flex:none !important;
+  display:grid !important;
+  place-items:center !important;
+  border:1px solid var(--line) !important;
+  border-radius:13px !important;
+  background:#fff !important;
+  color:var(--ink) !important;
+}
+#discover .discover-mode-section{
+  margin-top:8px !important;
+}
+#discover .discover-mode-content{
+  margin-top:0 !important;
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -330,23 +365,20 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 
 <section id="discover" class="screen">
 <header class="discover-header">
-  <div class="hrow" style="justify-content:flex-end">
-    <button class="icon" id="discoverFilterBtn" onclick="openDiscoverFilters()" aria-label="Filters">☷</button>
+  <div class="discover-search-row">
+    <div class="discover-search">
+      <span>⌕</span>
+      <input id="discoverSearch" oninput="filterDiscoverModes()" placeholder="Search golf, courses, coaches…" autocomplete="off">
+    </div>
+    <button class="icon discover-filter-inline" id="discoverFilterBtn" onclick="openDiscoverFilters()" aria-label="Filters">☷</button>
   </div>
 </header>
-
-<div class="section" style="margin-top:8px">
-  <div class="discover-search">
-    <span>⌕</span>
-    <input id="discoverSearch" oninput="filterDiscoverModes()" placeholder="Search golf, courses, coaches…" autocomplete="off">
-  </div>
-</div>
 
 <div class="section discover-mode-section">
   <div class="discover-modes" role="tablist">
     <button class="discover-mode active" data-mode="courses" onclick="setDiscoverMode('courses',this)">Courses</button>
     <button class="discover-mode" data-mode="coaches" onclick="setDiscoverMode('coaches',this)">Coaches</button>
-    <button class="discover-mode" data-mode="practice" onclick="setDiscoverMode('practice',this)">Practice</button>
+    <button class="discover-mode" data-mode="practice" onclick="setDiscoverMode('practice',this)">Range</button>
   </div>
 </div>
 
@@ -425,7 +457,7 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
     </div>
     <div class="listrow" onclick="show('range')">
       <div class="activity-icon range">◉</div>
-      <div style="flex:1"><b>Karnail Singh Range</b><div class="small muted">60 min · 14 Aug</div></div>
+      <div style="flex:1"><b>Delhi Golf Club Range</b><div class="small muted">60 min · 14 Aug</div></div>
       <span class="muted">›</span>
     </div>
   </div>
@@ -451,9 +483,9 @@ header{position:relative !important;top:auto !important;z-index:1 !important;bac
 
 <section id="range" class="screen">
 <header><div class="hrow"><div><div class="eyebrow">Practice</div><div class="title">Driving ranges</div></div></div></header>
-<div class="section"><div class="notice green">Karnail Singh Range · 18% off with your monthly package.</div></div>
+<div class="section"><div class="notice green">Delhi Golf Club Range · 18% off with your monthly package.</div></div>
 <div class="section"><div class="list">
-<div class="card pad" style="margin-bottom:9px"><div class="row"><div class="avatar" style="background:var(--teal)">🏌️</div><div style="flex:1"><b>Karnail Singh Range</b><div class="small muted">2.8 km · 4.6 ★ · 42 / 60 bays occupied</div></div><span class="pill pgreen">Open</span></div><div class="course-foot"><span class="small muted">Bucket · ₹350</span><button class="btn primary btn" onclick="openSheet('rangeBook')">Book range</button></div></div>
+<div class="card pad" style="margin-bottom:9px"><div class="row"><div class="avatar" style="background:var(--teal)">🏌️</div><div style="flex:1"><b>Delhi Golf Club Range</b><div class="small muted">2.8 km · 4.6 ★ · 42 / 60 bays occupied</div></div><span class="pill pgreen">Open</span></div><div class="course-foot"><span class="small muted">Bucket · ₹350</span><button class="btn primary btn" onclick="openSheet('rangeBook')">Book range</button></div></div>
 <div class="card pad"><div class="row"><div class="avatar" style="background:var(--purple)">R</div><div style="flex:1"><b>Qutub Practice Centre</b><div class="small muted">5.7 km · 4.4 ★ · Launch monitors</div></div><span class="pill pblue">12 bays</span></div><div class="course-foot"><span class="small muted">Bay · ₹900 / 60 min</span><button class="btn primary" onclick="openSheet('rangeBook')">Book bay</button></div></div>
 </div></div>
 <div class="section"><div class="secrow"><div class="seclabel">Packages</div></div><div class="grid2"><div class="card pad"><b>Unlimited Balls</b><div class="small muted">Monthly pass</div><h3 style="margin-top:8px">₹2,999</h3><button class="btn outline full" style="margin-top:10px" onclick="toast('Package added to cart')">View</button></div><div class="card pad"><b>10 Bucket Pack</b><div class="small muted">Save 15%</div><h3 style="margin-top:8px">₹2,975</h3><button class="btn outline full" style="margin-top:10px" onclick="toast('Package added to cart')">View</button></div></div></div>
@@ -619,10 +651,10 @@ function openSheet(type){
  confirmed:`<div class="handle"></div><div style="text-align:center;padding:10px 0 4px"><div style="font-size:48px">✓</div><h2>Tee time confirmed</h2><p class="small muted">Delhi Golf Club · Thu 20 Aug · 7:30 AM</p></div><div class="card pad" style="margin-top:12px;text-align:center"><span class="small muted">BOOKING ID</span><h3 style="margin:5px">DGC-48213</h3><div style="font-size:58px;margin:9px">▦</div><span class="small muted">Show QR at starter's desk</span></div><div class="actions"><button class="btn primary full" onclick="closeSheet();show('schedule')">View my schedule</button></div>`,
  reschedule:`<div class="handle"></div><h2>Reschedule booking</h2><div class="notice amber">Free reschedule until 7:30 PM today. After the cutoff, 50% of the green fee is charged.</div><div class="field"><label>New date</label><select><option>Friday · 21 Aug</option><option>Saturday · 22 Aug</option><option>Sunday · 23 Aug</option></select></div><div class="field"><label>New time</label><select><option>7:00 AM</option><option>7:30 AM</option><option>8:00 AM</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Keep booking</button><button class="btn primary" onclick="closeSheet();toast('Booking rescheduled')">Confirm change</button></div>`,
  bookingDetails:`<div class="handle"></div><h2>Booking DGC-48213</h2><div class="card pad"><b>Delhi Golf Club</b><div class="small muted">Thu 20 Aug · 7:30 AM · 18 holes</div><div style="margin-top:9px"><span class="pill pgreen">Confirmed</span></div></div><div class="list" style="margin-top:10px"><div class="listrow"><span>👤</span><div><b>Savdeep Kapoor</b><div class="small muted">Host</div></div></div><div class="listrow"><span>👤</span><div><b>Rohit Sharma</b><div class="small muted">Confirmed</div></div></div><div class="listrow"><span>👤</span><div><b>Vikram Singh</b><div class="small muted">Confirmed</div></div></div><div class="listrow"><span>🎒</span><div><b>Ramesh Kumar</b><div class="small muted">Caddy · ₹350</div></div></div></div><button class="btn secondary full" onclick="closeSheet()">Close</button>`,
- request:`<div class="handle"></div><h2>Request a lesson</h2><div class="field"><label>Coach</label><select><option>Savdeep Mehta · ₹2,000/hr</option><option>Rohit Kapoor · ₹1,500/hr</option></select></div><div class="field"><label>Session type</label><select><option>Short Game · 60 min</option><option>Course Play · 60 min</option><option>Driver & Swing · 60 min</option></select></div><div class="field"><label>Preferred day</label><select><option>Monday · 24 Aug</option><option>Tuesday · 25 Aug</option><option>Wednesday · 26 Aug</option></select></div><div class="field"><label>Location</label><select><option>Karnail Singh Range</option><option>Delhi Golf Club</option><option>Coach location</option></select></div><div class="field"><label>Notes</label><input placeholder="What do you want to work on?"></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Session request sent to Savdeep')">Send request</button></div>`,
+ request:`<div class="handle"></div><h2>Request a lesson</h2><div class="field"><label>Coach</label><select><option>Savdeep Mehta · ₹2,000/hr</option><option>Rohit Kapoor · ₹1,500/hr</option></select></div><div class="field"><label>Session type</label><select><option>Short Game · 60 min</option><option>Course Play · 60 min</option><option>Driver & Swing · 60 min</option></select></div><div class="field"><label>Preferred day</label><select><option>Monday · 24 Aug</option><option>Tuesday · 25 Aug</option><option>Wednesday · 26 Aug</option></select></div><div class="field"><label>Location</label><select><option>Delhi Golf Club Range</option><option>Delhi Golf Club</option><option>Coach location</option></select></div><div class="field"><label>Notes</label><input placeholder="What do you want to work on?"></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Session request sent to Savdeep')">Send request</button></div>`,
  coach:`<div class="handle"></div><div class="row"><div class="avatar" style="width:58px;height:58px">AM</div><div><h2 style="margin:0">Savdeep Mehta</h2><div class="small muted">PGA Professional · Delhi · 12 years</div><span class="pill pgreen" style="margin-top:5px">4.9 ★ · 128 reviews</span></div></div><div class="section" style="margin:16px 0 0"><b>Specialties</b><div class="chips" style="margin-top:8px"><span class="pill pblue">Short game</span><span class="pill pblue">Swing</span><span class="pill pblue">Course play</span></div></div><div class="card pad" style="margin-top:14px"><div class="row between"><span>Single lesson</span><b>₹2,000</b></div><div class="row between" style="margin-top:8px"><span>12-lesson pack</span><b>₹21,600</b></div><div class="row between" style="margin-top:8px"><span>Trial lesson</span><b>₹999</b></div></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Close</button><button class="btn primary" onclick="closeSheet();openSheet('request')">Request session</button></div>`,
  feedbackView:`<div class="handle"></div><h2>Driver · takeaway</h2><div class="small muted">18 Aug · Savdeep Mehta</div><div style="height:230px;background:#20242d;border-radius:15px;margin-top:12px;display:grid;place-items:center;color:#fff;font-size:72px">🏌️</div><div class="chips" style="margin-top:10px"><button class="chip sel">Setup</button><button class="chip">Takeaway</button><button class="chip">Top</button></div><div class="card pad" style="margin-top:12px"><b>Coach voice note · 0:42</b><p class="small muted" style="margin-top:6px;line-height:1.5">Slow the takeaway. Keep the club more in front of your chest before transition.</p><button class="btn secondary full" style="margin-top:10px" onclick="toast('Playing coach voiceover…')">▶ Play voiceover</button></div><button class="btn primary full" style="margin-top:12px" onclick="closeSheet()">Done</button>`,
- rangeBook:`<div class="handle"></div><h2>Book practice</h2><div class="field"><label>Facility</label><select><option>Karnail Singh Range</option><option>Qutub Practice Centre</option></select></div><div class="field"><label>Session</label><select><option>60 min · 1 bucket · ₹650</option><option>90 min · 2 buckets · ₹1,050</option><option>Launch monitor · ₹900</option></select></div><div class="field"><label>Time</label><select><option>Today · 7:00 PM</option><option>Today · 8:00 PM</option><option>Tomorrow · 7:00 AM</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Range session booked')">Book</button></div>`,
+ rangeBook:`<div class="handle"></div><h2>Book practice</h2><div class="field"><label>Facility</label><select><option>Delhi Golf Club Range</option><option>Qutub Practice Centre</option></select></div><div class="field"><label>Session</label><select><option>60 min · 1 bucket · ₹650</option><option>90 min · 2 buckets · ₹1,050</option><option>Launch monitor · ₹900</option></select></div><div class="field"><label>Time</label><select><option>Today · 7:00 PM</option><option>Today · 8:00 PM</option><option>Tomorrow · 7:00 AM</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Range session booked')">Book</button></div>`,
  tournament:`<div class="handle"></div><h2>Delhi Amateur Open</h2><div class="card pad"><b>31 Aug · Delhi Golf Club</b><div class="small muted">Stroke play · 96 players · Handicap required</div><div class="row between" style="margin-top:10px"><span>Entry fee</span><b>₹4,500</b></div></div><div class="field"><label>Handicap</label><input value="14.2"></div><div class="field"><label>Registration</label><select><option>Individual</option><option>Corporate team</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Tournament registration confirmed')">Register</button></div>`,
  fitting:`<div class="handle"></div><h2>Club fitting</h2><div class="field"><label>Clubs</label><select><option>Driver</option><option>Irons</option><option>Putter</option><option>Full bag</option></select></div><div class="field"><label>Preferred provider</label><select><option>DGC Pro Shop · ₹1,500</option><option>Golf House Delhi · ₹2,000</option></select></div><div class="field"><label>Notes</label><input placeholder="e.g. slice, launch too high, new irons"></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Fitting request sent')">Request fitting</button></div>`,
  profileEdit:`<div class="handle"></div><h2>Edit profile</h2><div class="field"><label>Name</label><input value="Savdeep Kapoor"></div><div class="field"><label>Email</label><input value="savdeep.k@example.com"></div><div class="field"><label>Playing level</label><select><option>Amateur</option><option>Junior</option><option>Professional</option><option>Casual</option></select></div><div class="actions"><button class="btn secondary" onclick="closeSheet()">Cancel</button><button class="btn primary" onclick="closeSheet();toast('Profile saved')">Save</button></div>`,
@@ -709,7 +741,7 @@ function renderDiscoverMode(mode){
   const box=document.getElementById('discoverModeContent');
   if(!box)return;
   const items=applyDiscoverFilters();
-  const label=mode==='courses'?'Courses near you':mode==='coaches'?'Coaches near you':'Practice near you';
+  const label=mode==='courses'?'Courses near you':mode==='coaches'?'Coaches near you':'Ranges near you';
 
   if(mode==='courses'){
     box.innerHTML=`<div class="section">
@@ -740,9 +772,9 @@ function renderDiscoverMode(mode){
   } else {
     box.innerHTML=`<div class="section">
       <div class="discover-mode-heading"><div class="seclabel">${label}</div><div class="count">${items.length} available</div></div>
-      <div class="discover-intro">Practice at a range, launch monitor or dedicated golf facility.</div>
+      <div class="discover-intro">Find driving ranges and golf practice facilities nearby.</div>
       <div class="discover-focus">
-        <span class="chip sel">All practice</span><span class="chip">Driving range</span><span class="chip">Launch monitor</span><span class="chip">Club fitting</span>
+        <span class="chip sel">All ranges</span><span class="chip">Driving range</span><span class="chip">Launch monitor</span><span class="chip">Club fitting</span>
       </div>
       <div class="discover-practice-list" style="margin-top:11px">${items.map(x=>`
         <div class="discover-practice-card" onclick="openDiscover('${x.id}')">
@@ -982,7 +1014,7 @@ function switchGolfType(type,btn){
     primary.innerHTML=`<div class="card pad"><div class="row"><div class="activity-icon lesson">◎</div><div style="flex:1"><div class="eyebrow">MONDAY · 10:30 AM</div><h3 style="margin:4px 0">Short Game</h3><div class="small muted">Savdeep Mehta · 60 min · KGA</div></div></div><button class="btn primary full" style="margin-top:13px" onclick="show('lessons')">View lesson</button></div>`;
   } else {
     label.textContent='UP NEXT';
-    primary.innerHTML=`<div class="card pad"><div class="row"><div class="activity-icon range">◉</div><div style="flex:1"><div class="eyebrow">THURSDAY · 6:00 PM</div><h3 style="margin:4px 0">Karnail Singh Range</h3><div class="small muted">60 min · Launch monitor · Bay 12</div></div></div><button class="btn primary full" style="margin-top:13px" onclick="show('range')">View session</button></div>`;
+    primary.innerHTML=`<div class="card pad"><div class="row"><div class="activity-icon range">◉</div><div style="flex:1"><div class="eyebrow">THURSDAY · 6:00 PM</div><h3 style="margin:4px 0">Delhi Golf Club Range</h3><div class="small muted">60 min · Launch monitor · Bay 12</div></div></div><button class="btn primary full" style="margin-top:13px" onclick="show('range')">View session</button></div>`;
   }
 }
 </script>
